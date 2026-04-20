@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oxidation State Master - Ms Khoo Xiang Yun</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at center, #1e293b, #0f172a);
+            color: #f8fafc;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .correct-flash { animation: flashGreen 0.5s ease-out; }
+        .wrong-flash { animation: flashRed 0.5s ease-out; }
+
+        @keyframes flashGreen {
+            0% { background-color: rgba(34, 197, 94, 0); }
+            50% { background-color: rgba(34, 197, 94, 0.3); }
+            100% { background-color: rgba(34, 197, 94, 0); }
+        }
+
+        @keyframes flashRed {
+            0% { background-color: rgba(239, 68, 68, 0); }
+            50% { background-color: rgba(239, 68, 68, 0.3); }
+            100% { background-color: rgba(239, 68, 68, 0); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .keypad-btn {
+            transition: transform 0.1s ease, background-color 0.2s;
+        }
+        .keypad-btn:active {
+            transform: scale(0.9);
+        }
+
+        .timer-bar {
+            transition: width 1s linear;
+        }
+
+        .point-pop {
+            animation: pointPop 0.5s ease-out forwards;
+        }
+        @keyframes pointPop {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-20px); opacity: 0; }
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center relative">
+
+    <!-- Flash Overlays -->
+    <div id="overlay" class="fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 opacity-0"></div>
+
+    <audio id="bgMusic" loop>
+        <source src="Quantum Drift.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- App Container -->
+    <div id="app" class="w-full max-w-lg h-[90vh] glass-panel rounded-3xl shadow-2xl flex flex-col p-6 mx-4 relative overflow-hidden">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-4">
+            <div class="flex flex-col">
+                <h1 class="text-xl font-bold text-blue-400 leading-none">Oxidation State Master</h1>
+                <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest">created by Ms Khoo Xiang Yun</p>
+            </div>
+            <button onclick="toggleFullscreen()" class="p-2 hover:bg-slate-700 rounded-lg transition-colors">
+                <i data-lucide="maximize"></i>
+            </button>
+        </header>
+
+        <!-- Dynamic Header Stats (Visible during Quiz) -->
+        <div id="quizHeaderStats" class="hidden w-full mb-2">
+            <div class="flex justify-between items-end mb-1 px-1">
+                <div class="flex items-center gap-1.5">
+                    <i data-lucide="timer" class="text-yellow-400 w-4 h-4"></i>
+                    <span id="timerDisplay" class="font-mono text-lg font-bold">60s</span>
+                </div>
+                <div class="flex items-center gap-2 relative">
+                    <div id="pointFloatContainer" class="absolute -top-8 right-0 pointer-events-none"></div>
+                    <span id="comboBadge" class="hidden bg-orange-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">x1</span>
+                    <span class="text-xs text-slate-400 uppercase tracking-tighter mr-1">Score:</span>
+                    <span id="scoreDisplay" class="text-xl font-bold text-green-400">0</span>
+                </div>
+            </div>
+            <div id="timerContainer" class="w-full h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700/50">
+                <div id="timerBar" class="timer-bar h-full bg-gradient-to-r from-blue-600 to-blue-400 w-full"></div>
+            </div>
+        </div>
+
+        <!-- Dynamic Content -->
+        <main id="gameContent" class="flex-grow flex flex-col items-center justify-center text-center overflow-hidden">
+            <!-- Content injected by JS -->
+        </main>
+
+        <!-- Ready Popup (Modal Over Main) -->
+        <div id="readyPopup" class="hidden absolute inset-0 z-40 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 text-center">
+            <div class="glass-panel p-8 rounded-3xl border border-blue-500/30 max-w-sm fade-in">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+                    <i data-lucide="zap" class="text-white w-8 h-8"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">You're Ready!</h3>
+                <p class="text-slate-300 text-sm mb-6 leading-relaxed">
+                    Now you are ready to take on the challenge! Key in the oxidation state of the element in the given compound as fast as you can in <span class="text-yellow-400 font-bold">1 minute</span>.
+                </p>
+                <button onclick="hideReadyPopupAndStart()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg active:scale-95">
+                    START CHALLENGE
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer Info -->
+        <footer id="footerInfo" class="mt-4 text-center text-[10px] text-slate-500 uppercase tracking-widest">
+            #scienceiskhool
+        </footer>
+    </div>
+
+    <script>
+        /** STATE MANAGEMENT **/
+        let state = 'START'; 
+        let score = 0;
+        let combo = 0;
+        let timeLeft = 60;
+        const totalQuizTime = 60;
+        let timerInterval = null;
+        let currentProblem = null;
+        let tutorialIndex = 0;
+        let highScore = parseInt(localStorage.getItem('oxi_highScore')) || 0;
+        let inputBuffer = "";
+        let mistakes = []; 
+
+        /** AUDIO CONTEXT **/
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSynth(freq, type, duration, vol = 0.1) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        const sounds = {
+            correct: () => playSynth(880, 'sine', 0.3, 0.1),
+            wrong: () => {
+                playSynth(220, 'sawtooth', 0.2, 0.1);
+                playSynth(110, 'sawtooth', 0.4, 0.1);
+            },
+            click: () => playSynth(440, 'sine', 0.05, 0.05),
+            gameOver: () => {
+                playSynth(523.25, 'sine', 0.3, 0.1);
+                setTimeout(() => playSynth(659.25, 'sine', 0.5, 0.1), 150);
+            },
+            fanfare: () => {
+                const now = audioCtx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+                notes.forEach((f, i) => {
+                    setTimeout(() => playSynth(f, 'triangle', 0.4, 0.15), i * 80);
+                });
+            }
+        };
+
+        /** DATA **/
+        const tutorialSteps = [
+            { rule: "Free Elements", description: "Atoms in their uncombined state always have an oxidation state of 0.", formula: "O₂", target: "O", answer: 0 },
+            { rule: "Simple Ions", description: "Monatomic ions have an oxidation state equal to their charge.", formula: "Na⁺", target: "Na", answer: 1 },
+            { rule: "Fluorine Rule", description: "Fluorine (F) is always -1 in all its compounds.", formula: "HF", target: "F", answer: -1 },
+            { rule: "Hydrogen Rule", description: "Hydrogen (H) is +1 in compounds, except in metal hydrides (where it is -1).", formula: "H₂O", target: "H", answer: 1 },
+            { rule: "Oxygen Rule", description: "Oxygen (O) is generally assigned -2 in compounds, except in peroxides (-1).", formula: "MgO", target: "O", answer: -2 },
+            { rule: "Sum Rule (Neutral)", description: "The sum of oxidation states in a neutral compound must equal 0.", formula: "CO₂", target: "C", answer: 4 },
+            { rule: "Sum Rule (Ions)", description: "In a polyatomic ion, the sum of oxidation states must equal the charge of the ion.", formula: "SO₄²⁻", target: "S", answer: 6 }
+        ];
+
+        const quizData = [
+            { f: "KMnO₄", t: "Mn", a: 7 }, { f: "H₂SO₄", t: "S", a: 6 }, { f: "K₂Cr₂O₇", t: "Cr", a: 6 },
+            { f: "CH₄", t: "C", a: -4 }, { f: "NH₃", t: "N", a: -3 }, { f: "NaCl", t: "Cl", a: -1 },
+            { f: "MgBr₂", t: "Mg", a: 2 }, { f: "Fe₂O₃", t: "Fe", a: 3 }, { f: "CuSO₄", t: "Cu", a: 2 },
+            { f: "NO₂", t: "N", a: 4 }, { f: "PCl₅", t: "P", a: 5 }, { f: "SF₆", t: "S", a: 6 },
+            { f: "CO", t: "C", a: 2 }, { f: "H₂O₂", t: "O", a: -1 }, { f: "LiH", t: "H", a: -1 },
+            { f: "K₂O", t: "K", a: 1 }, { f: "BaO₂", t: "Ba", a: 2 }, { f: "NO₃⁻", t: "N", a: 5 },
+            { f: "SO₄²⁻", t: "S", a: 6 }, { f: "PO₄³⁻", t: "P", a: 5 }, { f: "ClO₃⁻", t: "Cl", a: 5 },
+            { f: "CO₃²⁻", t: "C", a: 4 }, { f: "NH₄⁺", t: "N", a: -3 }, { f: "CrO₄²⁻", t: "Cr", a: 6 },
+            { f: "MnO₄²⁻", t: "Mn", a: 6 }, { f: "OH⁻", t: "O", a: -2 }, { f: "C₂O₄²⁻", t: "C", a: 3 },
+            { f: "ClO₄⁻", t: "Cl", a: 7 }, { f: "SO₃²⁻", t: "S", a: 4 }, { f: "NO₂⁻", t: "N", a: 3 },
+            { f: "S₂O₃²⁻", t: "S", a: 2 }, { f: "BrO₃⁻", t: "Br", a: 5 }, { f: "Fe(OH)₃", t: "Fe", a: 3 },
+            { f: "Ca₃(PO₄)₂", t: "P", a: 5 }, { f: "Al₂(SO₄)₃", t: "S", a: 6 }, { f: "NiCl₂", t: "Ni", a: 2 },
+            { f: "TiO₂", t: "Ti", a: 4 }
+        ];
+
+        /** UI LOGIC **/
+        function render() {
+            const container = document.getElementById('gameContent');
+            const quizHeader = document.getElementById('quizHeaderStats');
+            
+            if (state === 'START') {
+                quizHeader.classList.add('hidden');
+                container.innerHTML = `
+                    <div class="space-y-6">
+                        <div class="w-24 h-24 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="atom" class="w-12 h-12 text-blue-400 animate-pulse"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold">Ready to Calculate?</h2>
+                        <p class="text-slate-400 px-8 text-sm">Master the oxidation state rules or jump straight into the challenge.</p>
+                        
+                        <div class="flex flex-col gap-3 w-full max-w-xs mx-auto">
+                            <button onclick="startTutorial()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-10 rounded-2xl transition-all shadow-lg">
+                                Tutorial Mode
+                            </button>
+                            <button onclick="startQuiz()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 px-10 rounded-2xl transition-all border border-slate-600">
+                                1-Min Challenge
+                            </button>
+                        </div>
+                        <div class="pt-2">
+                            <p class="text-xs text-slate-500">Current High Score: <span class="text-yellow-500 font-bold">${highScore}</span></p>
+                        </div>
+                    </div>
+                `;
+            } else if (state === 'TUTORIAL') {
+                quizHeader.classList.add('hidden');
+                const step = tutorialSteps[tutorialIndex];
+                container.innerHTML = `
+                    <div class="w-full">
+                        <div class="mb-2 text-blue-400 text-sm font-bold uppercase tracking-wider">Rule ${tutorialIndex + 1} of ${tutorialSteps.length}</div>
+                        <h2 class="text-2xl font-bold mb-4">${step.rule}</h2>
+                        <div class="bg-slate-800/50 p-6 rounded-2xl mb-6 border border-slate-700">
+                            <p class="text-lg mb-4 text-slate-200 leading-tight">${step.description}</p>
+                            <div class="text-4xl font-mono text-yellow-400 font-bold mb-2">${step.formula}</div>
+                            <p class="text-sm text-slate-400">Determine oxidation state of: <span class="text-white font-bold">${step.target}</span></p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3 max-w-[300px] mx-auto">
+                            ${[-2, -1, 0, 1, 2, 4, 6, 7].map(n => `
+                                <button onclick="checkTutorial(${n})" class="keypad-btn bg-slate-700 hover:bg-slate-600 p-4 rounded-xl font-bold text-xl">${n > 0 ? '+' : ''}${n}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (state === 'QUIZ') {
+                quizHeader.classList.remove('hidden');
+                container.innerHTML = `
+                    <div class="w-full flex flex-col h-full">
+                        <div class="flex-grow flex flex-col items-center justify-center pt-2">
+                            <div class="text-sm text-slate-400 mb-1 uppercase tracking-tighter">Oxidation State of <span class="text-blue-300 font-bold">${currentProblem.t}</span> in:</div>
+                            <h2 class="text-5xl font-mono text-white font-bold mb-4 drop-shadow-lg">${currentProblem.f}</h2>
+                            <div class="bg-slate-900/50 w-full max-w-[180px] py-3 rounded-2xl border-2 border-slate-700 mb-6 shadow-inner">
+                                <span class="text-4xl font-mono font-bold text-blue-400">${inputBuffer || '<span class="opacity-20">?</span>'}</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 w-full max-w-[320px] mx-auto pb-2">
+                            ${[1, 2, 3, 4, 5, 6, 7, 8, 9, '+', 0, '-'].map(k => `
+                                <button onclick="handleKeypad('${k}')" class="keypad-btn bg-slate-800 hover:bg-slate-700 py-3.5 rounded-xl text-xl font-bold border-b-4 border-slate-950">${k}</button>
+                            `).join('')}
+                            <button onclick="clearInput()" class="keypad-btn bg-red-900/40 hover:bg-red-800/40 py-3 rounded-xl text-xs font-bold border-b-4 border-red-950 text-red-300 uppercase">Clear</button>
+                            <button onclick="submitAnswer()" class="keypad-btn col-span-2 bg-green-600 hover:bg-green-500 py-3 rounded-xl text-xl font-bold border-b-4 border-green-800 flex items-center justify-center gap-2">
+                                <i data-lucide="check-circle-2" class="w-5 h-5"></i> ENTER
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (state === 'RESULT') {
+                quizHeader.classList.add('hidden');
+                const isNewHigh = score > highScore;
+                
+                let mistakeHtml = "";
+                if (mistakes.length > 0) {
+                    mistakeHtml = `
+                        <div class="mt-4 w-full">
+                            <h3 class="text-xs text-slate-400 uppercase tracking-widest mb-2 font-bold">Review Mistakes</h3>
+                            <div class="max-h-[160px] overflow-y-auto custom-scroll space-y-2 pr-2">
+                                ${mistakes.map(m => `
+                                    <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded-lg border border-slate-700">
+                                        <div class="text-left">
+                                            <span class="font-mono text-sm">${m.formula}</span>
+                                            <span class="text-[10px] text-slate-400 ml-1">(${m.target})</span>
+                                        </div>
+                                        <div class="text-right text-xs">
+                                            <span class="text-red-400 line-through mr-2">${m.userAnswer > 0 ? '+' : ''}${m.userAnswer}</span>
+                                            <span class="text-green-400 font-bold">${m.correctAnswer > 0 ? '+' : ''}${m.correctAnswer}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    mistakeHtml = `
+                        <div class="mt-4 p-4 bg-green-500/10 rounded-2xl border border-green-500/20">
+                            <p class="text-green-400 text-sm font-bold">Perfect Accuracy! ✨</p>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = `
+                    <div class="w-full h-full flex flex-col pt-2">
+                        <h2 class="text-3xl font-extrabold text-blue-400">Time's Up!</h2>
+                        
+                        <div class="flex justify-center gap-6 py-4">
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 uppercase">Final Score</p>
+                                <p class="text-4xl font-bold text-white">${score}</p>
+                            </div>
+                            <div class="text-center border-l border-slate-700 pl-6">
+                                <p class="text-[10px] text-slate-400 uppercase">High Score</p>
+                                <p class="text-4xl font-bold text-yellow-500">${highScore}</p>
+                            </div>
+                        </div>
+
+                        ${isNewHigh ? '<p class="text-green-400 text-xs font-bold animate-bounce mb-2">★ NEW RECORD ★</p>' : ''}
+                        
+                        <div class="flex-grow overflow-hidden flex flex-col">
+                            ${mistakeHtml}
+                        </div>
+
+                        <div class="flex gap-3 w-full mt-4">
+                            <button onclick="resetGame()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-all border border-slate-600 text-sm">
+                                Home
+                            </button>
+                            <button onclick="startQuiz()" class="flex-[2] bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg text-sm">
+                                Play Again
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                if (isNewHigh) {
+                    highScore = score;
+                    localStorage.setItem('oxi_highScore', highScore);
+                    setTimeout(createConfetti, 300);
+                }
+            }
+            lucide.createIcons();
+        }
+
+        /** FLOW FUNCTIONS **/
+        function startTutorial() {
+            audioCtx.resume();
+            state = 'TUTORIAL';
+            tutorialIndex = 0;
+            render();
+        }
+
+        function checkTutorial(val) {
+            const step = tutorialSteps[tutorialIndex];
+            if (val === step.answer) {
+                flashOverlay('correct');
+                sounds.correct();
+                if (tutorialIndex < tutorialSteps.length - 1) {
+                    tutorialIndex++;
+                    render();
+                } else {
+                    showReadyPopup();
+                }
+            } else {
+                flashOverlay('wrong');
+                sounds.wrong();
+            }
+        }
+
+        function showReadyPopup() {
+            document.getElementById('readyPopup').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function hideReadyPopupAndStart() {
+            document.getElementById('readyPopup').classList.add('hidden');
+            startQuiz();
+        }
+
+        function startQuiz() {
+            audioCtx.resume();
+            state = 'QUIZ';
+            score = 0;
+            combo = 0;
+            timeLeft = totalQuizTime;
+            inputBuffer = "";
+            mistakes = [];
+            const music = document.getElementById('bgMusic');
+            music.volume = 0.2;
+            music.play().catch(() => {});
+            nextProblem();
+            updateStats();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const bar = document.getElementById('timerBar');
+                const display = document.getElementById('timerDisplay');
+                if (display) display.innerText = `${timeLeft}s`;
+                if (bar) bar.style.width = `${(timeLeft / totalQuizTime) * 100}%`;
+                if (timeLeft <= 0) endGame();
+            }, 1000);
+            render();
+        }
+
+        function nextProblem() {
+            let lastProblem = currentProblem;
+            do {
+                currentProblem = quizData[Math.floor(Math.random() * quizData.length)];
+            } while (currentProblem === lastProblem);
+            inputBuffer = "";
+            render();
+        }
+
+        function handleKeypad(val) {
+            sounds.click();
+            if (val === '+' || val === '-') {
+                if (inputBuffer === "") {
+                    inputBuffer = val;
+                } else if (inputBuffer.startsWith('+') || inputBuffer.startsWith('-')) {
+                    inputBuffer = val + inputBuffer.substring(1);
+                } else {
+                    inputBuffer = val + inputBuffer;
+                }
+            } else {
+                let digitsOnly = inputBuffer.replace(/[+-]/g, '');
+                if (digitsOnly.length < 2) {
+                    inputBuffer += val;
+                }
+            }
+            render();
+        }
+
+        function clearInput() {
+            inputBuffer = "";
+            render();
+        }
+
+        function submitAnswer() {
+            if (inputBuffer === "" || inputBuffer === "+" || inputBuffer === "-") return;
+            let userVal = parseInt(inputBuffer);
+            if (isNaN(userVal)) return;
+            if (userVal === currentProblem.a) {
+                flashOverlay('correct');
+                sounds.correct();
+                combo++;
+                const pointsGained = 10 * combo;
+                score += pointsGained;
+                showPointPop(pointsGained);
+                updateStats();
+                nextProblem();
+            } else {
+                flashOverlay('wrong');
+                sounds.wrong();
+                mistakes.push({
+                    formula: currentProblem.f,
+                    target: currentProblem.t,
+                    userAnswer: userVal,
+                    correctAnswer: currentProblem.a
+                });
+                combo = 0;
+                updateStats();
+                inputBuffer = "";
+                render();
+            }
+        }
+
+        function showPointPop(pts) {
+            const container = document.getElementById('pointFloatContainer');
+            if (!container) return;
+            const el = document.createElement('div');
+            el.className = 'point-pop text-green-400 font-bold text-xl';
+            el.innerText = `+${pts}`;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 600);
+        }
+
+        function updateStats() {
+            const scoreDisp = document.getElementById('scoreDisplay');
+            const comboBadge = document.getElementById('comboBadge');
+            if (scoreDisp) scoreDisp.innerText = score;
+            if (comboBadge) {
+                if (combo > 1) {
+                    comboBadge.classList.remove('hidden');
+                    comboBadge.innerText = `x${combo}`;
+                } else {
+                    comboBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        function flashOverlay(type) {
+            const el = document.getElementById('overlay');
+            el.className = `fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 ${type === 'correct' ? 'correct-flash' : 'wrong-flash'} opacity-100`;
+            setTimeout(() => {
+                el.className = `fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 opacity-0`;
+            }, 300);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            state = 'RESULT';
+            const music = document.getElementById('bgMusic');
+            music.pause();
+            music.currentTime = 0;
+            sounds.gameOver();
+            if (score > 0) sounds.fanfare();
+            render();
+        }
+
+        function resetGame() {
+            state = 'START';
+            render();
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.top = '-10px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                document.body.appendChild(confetti);
+                
+                const destinationY = 100 + Math.random() * 20;
+                const destinationX = (Math.random() - 0.5) * 300;
+                const rotation = Math.random() * 720;
+                const duration = 2000 + Math.random() * 3000;
+
+                confetti.animate([
+                    { transform: `translate3d(0, 0, 0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate3d(${destinationX}px, ${destinationY}vh, 0) rotate(${rotation}deg)`, opacity: 0 }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                }).onfinish = () => confetti.remove();
+            }
+        }
+
+        window.onload = () => render();
+        document.addEventListener('keydown', (e) => {
+            if (state !== 'QUIZ') return;
+            if (e.key >= '0' && e.key <= '9') handleKeypad(e.key);
+            if (e.key === '+') handleKeypad('+');
+            if (e.key === '-') handleKeypad('-');
+            if (e.key === 'Backspace') clearInput();
+            if (e.key === 'Enter') submitAnswer();
+        });
+    </script>
+</body>
+</html>
