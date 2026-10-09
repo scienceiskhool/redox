@@ -1,593 +1,954 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oxidation State Master - Ms Khoo Xiang Yun</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at center, #1e293b, #0f172a);
-            color: #f8fafc;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#069494">
+<title>Oxidation State Master · Science is Khool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Science is Khool · Tropical Punch — "Arcade Punch" game skin */
+:root {
+  --orange: #FF8243; --pink: #FFC0CB; --yellow: #FCE883; --teal: #069494; --teal-ink: #057A7A;
+  --orange-tint: #FFE6DA; --pink-tint: #FFEEF1; --yellow-tint: #FEF8D9; --teal-tint: #DDF2F2;
+  --ink: #1F2A2E; --muted: #56656A; --line: #E4E8E9; --bg: #FFFFFF;
+  --good: #1E9E62; --good-tint: #D8F3E4; --bad: #E2463A;
+  --b: 3px solid var(--ink);
+  --font: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body {
+  font: 16px/1.5 var(--font); min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+.sub { font-size: .62em; position: relative; bottom: -.28em; line-height: 0; }
+.sup { font-size: .62em; position: relative; top: -.6em; line-height: 0; margin-left: .04em; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
 
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+.wrap { width: 100%; max-width: 1040px; margin: 0 auto; padding: 16px; flex: 1; display: flex; flex-direction: column; }
+.card { background: #fff; border: var(--b); border-radius: 22px; box-shadow: 6px 6px 0 var(--ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: var(--b); border-radius: 16px; padding: 14px 18px; font-weight: 800; font-size: 1.1rem; background: var(--orange); color: var(--ink); box-shadow: 0 5px 0 var(--ink); transition: transform .08s, box-shadow .08s; user-select: none; -webkit-user-select: none; }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn.big { width: 100%; font-size: 1.15rem; text-transform: uppercase; letter-spacing: .03em; padding: 15px; }
+.btn.alt { background: #fff; }
+.btn.teal { background: var(--teal); color: #fff; }
+.pill { display: inline-block; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; border: 2px solid var(--ink); border-radius: 99px; padding: 2px 10px; background: #fff; color: var(--ink); }
+.icon-btn { width: 42px; height: 42px; border-radius: 12px; border: var(--b); background: #fff; display: grid; place-items: center; box-shadow: 0 3px 0 var(--ink); padding: 0; flex: none; }
+.icon-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+.icon-btn svg { width: 20px; height: 20px; }
+.icon-btn.off { opacity: .5; }
 
-        .correct-flash { animation: flashGreen 0.5s ease-out; }
-        .wrong-flash { animation: flashRed 0.5s ease-out; }
+.topbar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 2px solid var(--line); background: #fff; }
+.topbar .brand { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; text-decoration: none; color: var(--ink); }
+.topbar .brand img { width: 38px; height: 38px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--yellow); object-fit: cover; flex: none; }
+.topbar .brand b { font-weight: 800; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.topbar .brand small { display: block; font-size: .72rem; color: var(--muted); font-weight: 600; line-height: 1.2; }
+.topbar .brand > span { min-width: 0; }
 
-        @keyframes flashGreen {
-            0% { background-color: rgba(34, 197, 94, 0); }
-            50% { background-color: rgba(34, 197, 94, 0.3); }
-            100% { background-color: rgba(34, 197, 94, 0); }
-        }
+/* start */
+.start { display: grid; gap: 22px; grid-template-columns: 1fr; align-items: start; margin: auto 0; padding-block: 8px 20px; }
+.hero { background: var(--teal); color: #fff; padding: 22px 22px 0; overflow: hidden; display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.hero h1 { margin: 6px 0 6px; font-size: clamp(1.9rem, 6.5vw, 2.8rem); line-height: 1.08; font-weight: 800; }
+.hero h1 em { font-style: normal; background: var(--yellow); color: var(--ink); border: var(--b); border-radius: 14px; padding: 0 10px; display: inline-block; transform: rotate(-2deg); }
+.hero p { margin: 0 0 14px; max-width: 36ch; font-weight: 600; }
+.hero ul { margin: 0 0 20px; padding-left: 20px; font-weight: 600; font-size: .95rem; }
+.hero img.mascot { width: 92px; align-self: end; display: block; }
+.form { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.form h2 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fields .full { grid-column: 1 / -1; }
+label.f { display: flex; flex-direction: column; gap: 4px; font-weight: 700; font-size: .9rem; }
+label.f input, label.f select { font-size: 16px; padding: 12px; border: 2.5px solid var(--ink); border-radius: 12px; background: #fff; width: 100%; min-width: 0; }
+label.f input:focus, label.f select:focus { outline: 3px solid var(--yellow); outline-offset: 1px; }
+.form-err { color: var(--bad); font-weight: 700; font-size: .9rem; min-height: 1.2em; margin: -4px 0 0; }
+.start-btns { display: grid; gap: 12px; }
+.best { display: flex; justify-content: space-between; font-size: .9rem; color: var(--muted); font-weight: 700; }
+.best b { color: var(--ink); }
+@media (min-width: 760px) { .start { grid-template-columns: 1.1fr 1fr; gap: 28px; } .hero img.mascot { width: 120px; } }
 
-        @keyframes flashRed {
-            0% { background-color: rgba(239, 68, 68, 0); }
-            50% { background-color: rgba(239, 68, 68, 0.3); }
-            100% { background-color: rgba(239, 68, 68, 0); }
-        }
+/* message card (ready, level end, detective intro) */
+.msg { max-width: 520px; width: 100%; margin: auto; padding: 24px; display: flex; flex-direction: column; gap: 14px; text-align: center; }
+.msg h2 { margin: 0; font-size: 1.7rem; font-weight: 800; line-height: 1.15; }
+.msg p { margin: 0; color: var(--muted); }
+.rules { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+.rule { padding: 10px 12px; border: 2.5px solid var(--ink); border-radius: 14px; background: var(--yellow-tint); font-weight: 700; }
+.rule:nth-child(2) { background: var(--pink-tint); } .rule:nth-child(3) { background: var(--teal-tint); }
 
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            z-index: 100;
-            pointer-events: none;
-        }
+/* play */
+.play { display: grid; grid-template-columns: 1fr; border: var(--b); border-radius: 22px; overflow: hidden; box-shadow: 6px 6px 0 var(--ink); background: #fff; margin-block: 4px 16px; }
+.hud { background: var(--teal); color: #fff; padding: 14px; display: flex; flex-direction: column; gap: 10px; border-bottom: var(--b); }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.score { font-size: 1.9rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.score small { display: block; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; opacity: .9; margin-bottom: 2px; }
+.badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.lvl { background: var(--yellow); color: var(--ink); font-weight: 800; border: var(--b); border-radius: 10px; padding: 2px 10px; transform: rotate(-3deg); box-shadow: 2px 2px 0 var(--ink); white-space: nowrap; }
+.combo { background: var(--orange); color: var(--ink); font-weight: 800; border: var(--b); border-radius: 10px; padding: 2px 8px; transform: rotate(3deg); box-shadow: 2px 2px 0 var(--ink); white-space: nowrap; font-size: .9rem; }
+.pop { animation: pop .35s ease-out; }
+@keyframes pop { 0% { scale: .6; } 70% { scale: 1.15; } 100% { scale: 1; } }
+.hearts { display: flex; gap: 4px; }
+.hearts svg { width: 22px; height: 22px; }
+.hearts .lost { animation: lose .5s ease-out; }
+@keyframes lose { 0% { transform: scale(1.4); } 100% { transform: scale(1); } }
+.ladder { display: flex; gap: 4px; flex: 1; max-width: 220px; }
+.ladder i { flex: 1; height: 10px; border: 2px solid var(--ink); border-radius: 4px; background: rgba(255,255,255,.35); }
+.ladder i.done { background: var(--yellow); } .ladder i.now { background: #fff; } .ladder i.boss { background: var(--pink); }
+.qtime { flex: 1; height: 12px; border: 2px solid var(--ink); border-radius: 99px; background: #fff; overflow: hidden; }
+.qtime i { display: block; height: 100%; width: 100%; background: var(--orange); }
+.qtime i.warn { background: var(--bad); }
+.secs { font-weight: 800; font-size: .9rem; font-variant-numeric: tabular-nums; min-width: 2.6em; text-align: right; }
+.qcard { background: #fff; color: var(--ink); border: var(--b); border-radius: 16px; padding: 12px; text-align: center; position: relative; }
+.qcard.boss { background: var(--pink-tint); }
+.qcard .boss-tag { position: absolute; top: -12px; left: 50%; translate: -50% 0; background: var(--pink); border: 2.5px solid var(--ink); border-radius: 99px; padding: 0 10px; font-weight: 800; font-size: .78rem; letter-spacing: .08em; }
+.qcard small { display: block; font-weight: 700; color: var(--muted); font-size: .9rem; }
+.qcard .t { background: var(--yellow); border: 2px solid var(--ink); border-radius: 8px; padding: 0 6px; color: var(--ink); }
+.qcard .fml { display: block; font-size: clamp(2.2rem, 9vw, 3rem); font-weight: 800; line-height: 1.25; padding-top: 4px; }
+.qcard .eqn { display: block; font-size: clamp(1.15rem, 4.6vw, 1.5rem); font-weight: 800; line-height: 1.5; padding-top: 4px; }
+.rulebox { background: var(--yellow-tint); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 12px; }
+.rulebox b { display: block; font-size: 1.05rem; }
+.rulebox span { font-size: .92rem; }
 
-        .keypad-btn {
-            transition: transform 0.1s ease, background-color 0.2s;
-        }
-        .keypad-btn:active {
-            transform: scale(0.9);
-        }
+.controls { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.ansbox { display: flex; justify-content: center; }
+.ansbox span { min-width: 130px; text-align: center; font-size: 2.1rem; font-weight: 800; border: 3px dashed var(--ink); border-radius: 16px; padding: 0 14px; background: var(--yellow-tint); font-variant-numeric: tabular-nums; }
+.ansbox span.empty { color: #A9B4B7; }
+.ansbox span.shake { animation: shake .3s; }
+@keyframes shake { 25% { translate: -6px 0; } 75% { translate: 6px 0; } }
+.pad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.k { font-weight: 800; font-size: 1.35rem; padding: 10px 0; border: var(--b); border-radius: 14px; background: #fff; box-shadow: 0 4px 0 var(--ink); transition: transform .06s, box-shadow .06s; user-select: none; -webkit-user-select: none; min-height: 52px; }
+.k:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+.k.sign { background: var(--pink-tint); font-size: 1.6rem; }
+.k.sign.on { background: var(--pink); }
+.k.del { background: var(--teal-tint); }
+.k.go { grid-column: span 3; background: var(--orange); font-size: 1.15rem; text-transform: uppercase; letter-spacing: .04em; }
+.pad-help { margin: -4px 0 0; text-align: center; font-size: .82rem; color: var(--muted); font-weight: 600; }
+.chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+.chip { font-weight: 800; font-size: 1.3rem; padding: 12px 6px; border: var(--b); border-radius: 16px; background: #fff; box-shadow: 0 4px 0 var(--ink); }
+.chip:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+.chip.ox { background: var(--orange-tint); } .chip.red { background: var(--teal-tint); }
+.chip small { display: block; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+.ask { font-weight: 800; font-size: 1.05rem; text-align: center; margin: 0; }
+.ask em { font-style: normal; padding: 0 6px; border-radius: 6px; border: 2px solid var(--ink); }
+.ask em.o { background: var(--orange-tint); } .ask em.r { background: var(--teal-tint); }
 
-        .timer-bar {
-            transition: width 1s linear;
-        }
+.feedback { border: var(--b); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.feedback.ok { background: var(--good-tint); } .feedback.no { background: var(--orange-tint); }
+.feedback h3 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.feedback p { margin: 0; font-weight: 600; }
+.feedback .ans { font-weight: 800; font-size: 1.15rem; }
+.working { background: #fff; border: 2px solid var(--ink); border-radius: 12px; padding: 8px 12px; font-weight: 600; font-size: .98rem; display: flex; flex-direction: column; gap: 2px; }
+.working b { font-weight: 800; }
+.feedback .tip { font-size: .9rem; background: rgba(255,255,255,.7); border-radius: 10px; padding: 6px 10px; }
+.flash { text-align: center; font-weight: 800; font-size: 1.4rem; padding: 18px; border: var(--b); border-radius: 16px; background: var(--good-tint); }
+.flash.lvlup { background: var(--yellow); }
 
-        .point-pop {
-            animation: pointPop 0.5s ease-out forwards;
-        }
-        @keyframes pointPop {
-            0% { transform: translateY(0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-20px); opacity: 0; }
-        }
+@media (min-width: 760px) {
+  .play { grid-template-columns: 1.1fr 1fr; }
+  .hud { border-bottom: 0; border-right: var(--b); justify-content: center; padding: 18px; }
+  .controls { padding: 18px; justify-content: center; }
+}
 
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-    </style>
+/* results */
+.results { display: grid; gap: 18px; grid-template-columns: 1fr; padding-block: 8px 20px; }
+.res-hero { background: var(--teal); color: #fff; padding: 22px; display: flex; gap: 18px; align-items: center; }
+.big-ring { --p: 0; width: 120px; height: 120px; flex: none; border-radius: 50%; border: var(--b); background: conic-gradient(var(--yellow) calc(var(--p) * 1%), #fff 0); display: grid; place-items: center; }
+.big-ring span { width: 88px; height: 88px; border-radius: 50%; background: #fff; color: var(--ink); border: var(--b); display: grid; place-items: center; font-weight: 800; font-size: 1.7rem; }
+.res-hero h2 { margin: 0 0 4px; font-size: 1.6rem; line-height: 1.15; font-weight: 800; }
+.res-hero p { margin: 0; font-weight: 600; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.stat { border: var(--b); border-radius: 14px; padding: 8px 10px; box-shadow: 0 4px 0 var(--ink); }
+.stat span { display: block; font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.stat b { font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.stat:nth-child(1) { background: var(--yellow-tint); } .stat:nth-child(2) { background: var(--pink-tint); } .stat:nth-child(3) { background: var(--teal-tint); } .stat:nth-child(4) { background: var(--orange-tint); }
+.panel { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.panel h3 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+.bars { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: 10.5em 1fr 3.2em; gap: 10px; align-items: center; font-weight: 700; font-size: .92rem; }
+.bar { height: 14px; border: 2px solid var(--ink); border-radius: 99px; overflow: hidden; background: #fff; }
+.bar i { display: block; height: 100%; background: var(--teal); } .bar i.low { background: var(--orange); }
+.bar-row .n { text-align: right; font-variant-numeric: tabular-nums; }
+.weak, .review { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.weak li { border: 2.5px solid var(--ink); border-radius: 14px; padding: 10px 12px; background: var(--orange-tint); }
+.weak li b { display: block; } .weak li span { font-size: .9rem; }
+.weak li.good { background: var(--good-tint); }
+.review li { border-bottom: 2px solid var(--line); padding: 6px 0 8px; font-size: .95rem; }
+.review li:last-child { border-bottom: 0; }
+.review .you { color: var(--bad); font-weight: 700; } .review .key { color: var(--good); font-weight: 800; }
+.review .how { display: block; color: var(--muted); font-size: .85rem; }
+.send { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-weight: 700; padding: 12px 14px; border: 2.5px solid var(--ink); border-radius: 14px; background: var(--teal-tint); }
+.send.err { background: var(--orange-tint); }
+.send .btn { padding: 8px 14px; font-size: .95rem; box-shadow: 0 3px 0 var(--ink); }
+.res-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.res-actions .btn { flex: 1 1 200px; }
+@media (min-width: 760px) { .results { grid-template-columns: 1fr 1fr; align-items: start; } .results .span { grid-column: 1 / -1; } }
+@media (max-width: 480px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .res-hero { flex-direction: column; text-align: center; }
+  .bar-row { grid-template-columns: 8.6em 1fr 3em; font-size: .85rem; }
+}
+footer { text-align: center; color: var(--muted); font-size: .82rem; padding: 14px 16px 20px; }
+footer a { color: var(--teal-ink); font-weight: 700; }
+canvas#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+@media (prefers-reduced-motion: reduce) { .pop, .hearts .lost, .shake { animation: none !important; } }
+</style>
 </head>
-<body class="h-screen w-screen flex items-center justify-center relative">
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><path id="heart" d="M12 21s-7.5-4.6-9.5-9.3C1 8.3 3.3 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.7 0 6 3.8 4.5 7.2C19.5 16.4 12 21 12 21z"/></defs></svg>
+<audio id="music" loop preload="none" src="Quantum%20Drift.mp3"></audio>
 
-    <!-- Flash Overlays -->
-    <div id="overlay" class="fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 opacity-0"></div>
+<header class="topbar">
+  <a class="brand" href="https://scienceiskhool.github.io/scienceiskhool/" target="_blank" rel="noopener">
+    <img src="https://scienceiskhool.github.io/scienceiskhool/assets/img/head.png" alt="" onerror="this.style.visibility='hidden'">
+    <span><b>Oxidation State Master</b><small>Science is Khool · Redox</small></span>
+  </a>
+  <button class="icon-btn" id="btn-music" type="button" aria-label="Music on" title="Music">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+  </button>
+  <button class="icon-btn" id="btn-sound" type="button" aria-label="Sound effects on" title="Sound effects">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
+  </button>
+  <button class="icon-btn" id="btn-full" type="button" aria-label="Full screen" title="Full screen" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+  </button>
+</header>
 
-    <audio id="bgMusic" loop>
-        <source src="Quantum Drift.mp3" type="audio/mpeg">
-    </audio>
+<main class="wrap">
+  <!-- START -->
+  <section id="scr-start" class="start">
+    <div class="card hero">
+      <div>
+        <span class="pill">Chemistry · Redox</span>
+        <h1>Oxidation State <em>Master</em></h1>
+        <p>Work out oxidation states, climb 5 levels and beat the bosses. Then play detective and find what's oxidised and reduced.</p>
+        <ul><li>3 lives — a wrong answer shows you the working</li><li>Boss substance at the end of every level</li><li>Redox Detective round to finish</li></ul>
+      </div>
+      <img class="mascot" src="https://scienceiskhool.github.io/scienceiskhool/assets/img/mascots/test-tube.png" alt="" onerror="this.style.display='none'">
+    </div>
+    <form class="card form" id="form-start" novalidate>
+      <h2>Sign in to play</h2>
+      <div class="fields">
+        <label class="f full" for="in-name">Name<input id="in-name" maxlength="60" autocomplete="name" required></label>
+        <label class="f" for="in-cls">Class<select id="in-cls" required><option value="">Choose…</option></select></label>
+        <label class="f" for="in-reg">Register no.<input id="in-reg" inputmode="numeric" pattern="[0-9]*" maxlength="2" required></label>
+      </div>
+      <p class="form-err" id="form-err" role="alert"></p>
+      <div class="start-btns">
+        <button class="btn big teal" type="submit" data-mode="tutorial">Learn the rules first</button>
+        <button class="btn big" type="submit" data-mode="challenge">Start the challenge ▶</button>
+      </div>
+      <div class="best"><span>Your best points on this device</span><b id="txt-best">0</b></div>
+    </form>
+  </section>
 
-    <!-- App Container -->
-    <div id="app" class="w-full max-w-lg h-[90vh] glass-panel rounded-3xl shadow-2xl flex flex-col p-6 mx-4 relative overflow-hidden">
-        
-        <!-- Header -->
-        <header class="flex justify-between items-center mb-4">
-            <div class="flex flex-col">
-                <h1 class="text-xl font-bold text-blue-400 leading-none">Oxidation State Master</h1>
-                <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest">created by Ms Khoo Xiang Yun</p>
-            </div>
-            <button onclick="toggleFullscreen()" class="p-2 hover:bg-slate-700 rounded-lg transition-colors">
-                <i data-lucide="maximize"></i>
-            </button>
-        </header>
+  <!-- MESSAGE (ready / level summary / detective intro) -->
+  <section id="scr-msg" class="card msg" hidden>
+    <span class="pill" id="msg-pill"></span>
+    <h2 id="msg-title"></h2>
+    <p id="msg-text"></p>
+    <div class="rules" id="msg-rules"></div>
+    <button class="btn big" id="msg-btn" type="button"></button>
+  </section>
 
-        <!-- Dynamic Header Stats (Visible during Quiz) -->
-        <div id="quizHeaderStats" class="hidden w-full mb-2">
-            <div class="flex justify-between items-end mb-1 px-1">
-                <div class="flex items-center gap-1.5">
-                    <i data-lucide="timer" class="text-yellow-400 w-4 h-4"></i>
-                    <span id="timerDisplay" class="font-mono text-lg font-bold">60s</span>
-                </div>
-                <div class="flex items-center gap-2 relative">
-                    <div id="pointFloatContainer" class="absolute -top-8 right-0 pointer-events-none"></div>
-                    <span id="comboBadge" class="hidden bg-orange-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">x1</span>
-                    <span class="text-xs text-slate-400 uppercase tracking-tighter mr-1">Score:</span>
-                    <span id="scoreDisplay" class="text-xl font-bold text-green-400">0</span>
-                </div>
-            </div>
-            <div id="timerContainer" class="w-full h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700/50">
-                <div id="timerBar" class="timer-bar h-full bg-gradient-to-r from-blue-600 to-blue-400 w-full"></div>
-            </div>
-        </div>
-
-        <!-- Dynamic Content -->
-        <main id="gameContent" class="flex-grow flex flex-col items-center justify-center text-center overflow-hidden">
-            <!-- Content injected by JS -->
-        </main>
-
-        <!-- Ready Popup (Modal Over Main) -->
-        <div id="readyPopup" class="hidden absolute inset-0 z-40 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 text-center">
-            <div class="glass-panel p-8 rounded-3xl border border-blue-500/30 max-w-sm fade-in">
-                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
-                    <i data-lucide="zap" class="text-white w-8 h-8"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-3">You're Ready!</h3>
-                <p class="text-slate-300 text-sm mb-6 leading-relaxed">
-                    Now you are ready to take on the challenge! Key in the oxidation state of the element in the given compound as fast as you can in <span class="text-yellow-400 font-bold">1 minute</span>.
-                </p>
-                <button onclick="hideReadyPopupAndStart()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg active:scale-95">
-                    START CHALLENGE
-                </button>
-            </div>
-        </div>
-
-        <!-- Footer Info -->
-        <footer id="footerInfo" class="mt-4 text-center text-[10px] text-slate-500 uppercase tracking-widest">
-            #scienceiskhool
-        </footer>
+  <!-- PLAY -->
+  <section id="scr-play" class="play" hidden>
+    <div class="hud">
+      <div class="row" id="hud-top">
+        <div class="score"><small>Points</small><span id="txt-points">0</span></div>
+        <div class="badges"><span class="combo" id="txt-combo" hidden>2× combo</span><span class="lvl" id="txt-lvl">Level 1</span></div>
+      </div>
+      <div class="row" id="hud-mid">
+        <div class="hearts" id="hearts" aria-label="3 lives left"></div>
+        <div class="ladder" id="ladder" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="row" id="hud-time"><div class="qtime"><i id="bar-time"></i></div><span class="secs" id="txt-secs">20s</span></div>
+      <div class="rulebox" id="rulebox" hidden><b id="rule-title"></b><span id="rule-text"></span></div>
+      <div class="qcard" id="qcard" aria-live="polite"></div>
     </div>
 
-    <script>
-        /** STATE MANAGEMENT **/
-        let state = 'START'; 
-        let score = 0;
-        let combo = 0;
-        let timeLeft = 60;
-        const totalQuizTime = 60;
-        let timerInterval = null;
-        let currentProblem = null;
-        let tutorialIndex = 0;
-        let highScore = parseInt(localStorage.getItem('oxi_highScore')) || 0;
-        let inputBuffer = "";
-        let mistakes = []; 
+    <div class="controls">
+      <!-- keypad -->
+      <div id="ctl-pad">
+        <div class="ansbox"><span id="ans" class="empty">?</span></div>
+        <div class="pad" style="margin-top:12px">
+          <button class="k" type="button" data-k="1">1</button><button class="k" type="button" data-k="2">2</button><button class="k" type="button" data-k="3">3</button><button class="k sign" type="button" data-k="+" aria-label="plus">+</button>
+          <button class="k" type="button" data-k="4">4</button><button class="k" type="button" data-k="5">5</button><button class="k" type="button" data-k="6">6</button><button class="k sign" type="button" data-k="-" aria-label="minus">−</button>
+          <button class="k" type="button" data-k="7">7</button><button class="k" type="button" data-k="8">8</button><button class="k" type="button" data-k="9">9</button><button class="k" type="button" data-k="0">0</button>
+          <button class="k del" type="button" data-k="del" aria-label="Delete">⌫</button><button class="k go" type="button" data-k="go">Enter</button>
+        </div>
+        <p class="pad-help" style="margin-top:10px">Include the sign: +3 or −2 (0 needs no sign).</p>
+      </div>
+      <!-- detective -->
+      <div id="ctl-det" hidden>
+        <p class="ask" id="det-ask"></p>
+        <div class="chips" id="det-chips" style="margin-top:12px"></div>
+      </div>
+      <!-- feedback -->
+      <div class="feedback" id="fb" hidden aria-live="assertive">
+        <h3 id="fb-title"></h3>
+        <p id="fb-ans"></p>
+        <div class="working" id="fb-work"></div>
+        <p class="tip" id="fb-tip" hidden></p>
+        <button class="btn teal" id="btn-next" type="button">Next →</button>
+      </div>
+      <div class="flash" id="flash" hidden></div>
+    </div>
+  </section>
 
-        /** AUDIO CONTEXT **/
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        function playSynth(freq, type, duration, vol = 0.1) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        }
+  <!-- RESULTS -->
+  <section id="scr-result" class="results" hidden>
+    <div class="card res-hero span">
+      <div class="big-ring" id="res-ring"><span id="res-pct">0%</span></div>
+      <div><h2 id="res-title"></h2><p id="res-msg"></p></div>
+    </div>
+    <div class="stats span">
+      <div class="stat"><span>Correct</span><b id="res-correct">0/0</b></div>
+      <div class="stat"><span>Level reached</span><b id="res-level">1</b></div>
+      <div class="stat"><span>Time</span><b id="res-time">0:00</b></div>
+      <div class="stat"><span>Points</span><b id="res-points">0</b></div>
+    </div>
+    <div class="card panel">
+      <h3>How you did</h3>
+      <div class="bars" id="res-bars"></div>
+      <h3 style="margin-top:6px">What to work on</h3>
+      <ul class="weak" id="res-weak"></ul>
+    </div>
+    <div class="card panel">
+      <h3>Check your mistakes</h3>
+      <ul class="review" id="res-review"></ul>
+    </div>
+    <div class="send span" id="send" aria-live="polite"><span id="send-msg">Sending your results to Ms Khoo…</span><button class="btn alt" id="btn-resend" type="button" hidden>Try again</button></div>
+    <div class="res-actions span">
+      <button class="btn big teal" id="btn-home" type="button">Home</button>
+      <button class="btn big" id="btn-again" type="button">Play again ↻</button>
+    </div>
+  </section>
+</main>
 
-        const sounds = {
-            correct: () => playSynth(880, 'sine', 0.3, 0.1),
-            wrong: () => {
-                playSynth(220, 'sawtooth', 0.2, 0.1);
-                playSynth(110, 'sawtooth', 0.4, 0.1);
-            },
-            click: () => playSynth(440, 'sine', 0.05, 0.05),
-            gameOver: () => {
-                playSynth(523.25, 'sine', 0.3, 0.1);
-                setTimeout(() => playSynth(659.25, 'sine', 0.5, 0.1), 150);
-            },
-            fanfare: () => {
-                const now = audioCtx.currentTime;
-                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
-                notes.forEach((f, i) => {
-                    setTimeout(() => playSynth(f, 'triangle', 0.4, 0.15), i * 80);
-                });
-            }
-        };
+<footer>Created by Ms Khoo Xiang Yun · <a href="https://scienceiskhool.github.io/scienceiskhool/" target="_blank" rel="noopener">Science is Khool</a></footer>
+<canvas id="confetti" hidden></canvas>
 
-        /** DATA **/
-        const tutorialSteps = [
-            { rule: "Free Elements", description: "Atoms in their uncombined state always have an oxidation state of 0.", formula: "O₂", target: "O", answer: 0 },
-            { rule: "Simple Ions", description: "Monatomic ions have an oxidation state equal to their charge.", formula: "Na⁺", target: "Na", answer: 1 },
-            { rule: "Fluorine Rule", description: "Fluorine (F) is always -1 in all its compounds.", formula: "HF", target: "F", answer: -1 },
-            { rule: "Hydrogen Rule", description: "Hydrogen (H) is +1 in compounds, except in metal hydrides (where it is -1).", formula: "H₂O", target: "H", answer: 1 },
-            { rule: "Oxygen Rule", description: "Oxygen (O) is generally assigned -2 in compounds, except in peroxides (-1).", formula: "MgO", target: "O", answer: -2 },
-            { rule: "Sum Rule (Neutral)", description: "The sum of oxidation states in a neutral compound must equal 0.", formula: "CO₂", target: "C", answer: 4 },
-            { rule: "Sum Rule (Ions)", description: "In a polyatomic ion, the sum of oxidation states must equal the charge of the ion.", formula: "SO₄²⁻", target: "S", answer: 6 }
-        ];
+<script>
+(function () {
+"use strict";
 
-        const quizData = [
-            { f: "KMnO₄", t: "Mn", a: 7 }, { f: "H₂SO₄", t: "S", a: 6 }, { f: "K₂Cr₂O₇", t: "Cr", a: 6 },
-            { f: "CH₄", t: "C", a: -4 }, { f: "NH₃", t: "N", a: -3 }, { f: "NaCl", t: "Cl", a: -1 },
-            { f: "MgBr₂", t: "Mg", a: 2 }, { f: "Fe₂O₃", t: "Fe", a: 3 }, { f: "CuSO₄", t: "Cu", a: 2 },
-            { f: "NO₂", t: "N", a: 4 }, { f: "PCl₅", t: "P", a: 5 }, { f: "SF₆", t: "S", a: 6 },
-            { f: "CO", t: "C", a: 2 }, { f: "H₂O₂", t: "O", a: -1 }, { f: "LiH", t: "H", a: -1 },
-            { f: "K₂O", t: "K", a: 1 }, { f: "BaO₂", t: "Ba", a: 2 }, { f: "NO₃⁻", t: "N", a: 5 },
-            { f: "SO₄²⁻", t: "S", a: 6 }, { f: "PO₄³⁻", t: "P", a: 5 }, { f: "ClO₃⁻", t: "Cl", a: 5 },
-            { f: "CO₃²⁻", t: "C", a: 4 }, { f: "NH₄⁺", t: "N", a: -3 }, { f: "CrO₄²⁻", t: "Cr", a: 6 },
-            { f: "MnO₄²⁻", t: "Mn", a: 6 }, { f: "OH⁻", t: "O", a: -2 }, { f: "C₂O₄²⁻", t: "C", a: 3 },
-            { f: "ClO₄⁻", t: "Cl", a: 7 }, { f: "SO₃²⁻", t: "S", a: 4 }, { f: "NO₂⁻", t: "N", a: 3 },
-            { f: "S₂O₃²⁻", t: "S", a: 2 }, { f: "BrO₃⁻", t: "Br", a: 5 }, { f: "Fe(OH)₃", t: "Fe", a: 3 },
-            { f: "Ca₃(PO₄)₂", t: "P", a: 5 }, { f: "Al₂(SO₄)₃", t: "S", a: 6 }, { f: "NiCl₂", t: "Ni", a: 2 },
-            { f: "TiO₂", t: "Ti", a: 4 }
-        ];
+/* =================== SETTINGS (safe to edit) =================== */
+var SUBMIT_URL = "https://script.google.com/macros/s/AKfycbxCTjRCQzLlWXmmY-5R0p75WCmeFLzC9ZM3gNbGRXpcc_d9qHMXdyCn12B4dHpnrBWe/exec";
+var SHEET_TAB = "Oxidation States";        // tab name in your Google Sheet
+var ACTIVITY = "Oxidation state game";     // shows in the "Chapter" column
+var LIVES = 3;
+var LEVELS = 5;                            // each level = 4 questions + 1 boss
+var PER_LEVEL = 5;
+var SECONDS = 20, SECONDS_BOSS = 30, SECONDS_DETECTIVE = 30;
+var DETECTIVE_ROUNDS = 5;
+var CLASSES = [];
+["S1", "S2", "S3", "S4"].forEach(function (l) {
+  ["Charity", "Courage", "Faith", "Hope", "Humility", "Integrity", "Love", "Respect", "Joy"].forEach(function (v) { CLASSES.push(l + " " + v); });
+});
+CLASSES.push("S5 Faith", "Other");
 
-        /** UI LOGIC **/
-        function render() {
-            const container = document.getElementById('gameContent');
-            const quizHeader = document.getElementById('quizHeaderStats');
-            
-            if (state === 'START') {
-                quizHeader.classList.add('hidden');
-                container.innerHTML = `
-                    <div class="space-y-6">
-                        <div class="w-24 h-24 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i data-lucide="atom" class="w-12 h-12 text-blue-400 animate-pulse"></i>
-                        </div>
-                        <h2 class="text-3xl font-bold">Ready to Calculate?</h2>
-                        <p class="text-slate-400 px-8 text-sm">Master the oxidation state rules or jump straight into the challenge.</p>
-                        
-                        <div class="flex flex-col gap-3 w-full max-w-xs mx-auto">
-                            <button onclick="startTutorial()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-10 rounded-2xl transition-all shadow-lg">
-                                Tutorial Mode
-                            </button>
-                            <button onclick="startQuiz()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 px-10 rounded-2xl transition-all border border-slate-600">
-                                1-Min Challenge
-                            </button>
-                        </div>
-                        <div class="pt-2">
-                            <p class="text-xs text-slate-500">Current High Score: <span class="text-yellow-500 font-bold">${highScore}</span></p>
-                        </div>
-                    </div>
-                `;
-            } else if (state === 'TUTORIAL') {
-                quizHeader.classList.add('hidden');
-                const step = tutorialSteps[tutorialIndex];
-                container.innerHTML = `
-                    <div class="w-full">
-                        <div class="mb-2 text-blue-400 text-sm font-bold uppercase tracking-wider">Rule ${tutorialIndex + 1} of ${tutorialSteps.length}</div>
-                        <h2 class="text-2xl font-bold mb-4">${step.rule}</h2>
-                        <div class="bg-slate-800/50 p-6 rounded-2xl mb-6 border border-slate-700">
-                            <p class="text-lg mb-4 text-slate-200 leading-tight">${step.description}</p>
-                            <div class="text-4xl font-mono text-yellow-400 font-bold mb-2">${step.formula}</div>
-                            <p class="text-sm text-slate-400">Determine oxidation state of: <span class="text-white font-bold">${step.target}</span></p>
-                        </div>
-                        <div class="grid grid-cols-3 gap-3 max-w-[300px] mx-auto">
-                            ${[-2, -1, 0, 1, 2, 4, 6, 7].map(n => `
-                                <button onclick="checkTutorial(${n})" class="keypad-btn bg-slate-700 hover:bg-slate-600 p-4 rounded-xl font-bold text-xl">${n > 0 ? '+' : ''}${n}</button>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (state === 'QUIZ') {
-                quizHeader.classList.remove('hidden');
-                container.innerHTML = `
-                    <div class="w-full flex flex-col h-full">
-                        <div class="flex-grow flex flex-col items-center justify-center pt-2">
-                            <div class="text-sm text-slate-400 mb-1 uppercase tracking-tighter">Oxidation State of <span class="text-blue-300 font-bold">${currentProblem.t}</span> in:</div>
-                            <h2 class="text-5xl font-mono text-white font-bold mb-4 drop-shadow-lg">${currentProblem.f}</h2>
-                            <div class="bg-slate-900/50 w-full max-w-[180px] py-3 rounded-2xl border-2 border-slate-700 mb-6 shadow-inner">
-                                <span class="text-4xl font-mono font-bold text-blue-400">${inputBuffer || '<span class="opacity-20">?</span>'}</span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-2 w-full max-w-[320px] mx-auto pb-2">
-                            ${[1, 2, 3, 4, 5, 6, 7, 8, 9, '+', 0, '-'].map(k => `
-                                <button onclick="handleKeypad('${k}')" class="keypad-btn bg-slate-800 hover:bg-slate-700 py-3.5 rounded-xl text-xl font-bold border-b-4 border-slate-950">${k}</button>
-                            `).join('')}
-                            <button onclick="clearInput()" class="keypad-btn bg-red-900/40 hover:bg-red-800/40 py-3 rounded-xl text-xs font-bold border-b-4 border-red-950 text-red-300 uppercase">Clear</button>
-                            <button onclick="submitAnswer()" class="keypad-btn col-span-2 bg-green-600 hover:bg-green-500 py-3 rounded-xl text-xl font-bold border-b-4 border-green-800 flex items-center justify-center gap-2">
-                                <i data-lucide="check-circle-2" class="w-5 h-5"></i> ENTER
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else if (state === 'RESULT') {
-                quizHeader.classList.add('hidden');
-                const isNewHigh = score > highScore;
-                
-                let mistakeHtml = "";
-                if (mistakes.length > 0) {
-                    mistakeHtml = `
-                        <div class="mt-4 w-full">
-                            <h3 class="text-xs text-slate-400 uppercase tracking-widest mb-2 font-bold">Review Mistakes</h3>
-                            <div class="max-h-[160px] overflow-y-auto custom-scroll space-y-2 pr-2">
-                                ${mistakes.map(m => `
-                                    <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded-lg border border-slate-700">
-                                        <div class="text-left">
-                                            <span class="font-mono text-sm">${m.formula}</span>
-                                            <span class="text-[10px] text-slate-400 ml-1">(${m.target})</span>
-                                        </div>
-                                        <div class="text-right text-xs">
-                                            <span class="text-red-400 line-through mr-2">${m.userAnswer > 0 ? '+' : ''}${m.userAnswer}</span>
-                                            <span class="text-green-400 font-bold">${m.correctAnswer > 0 ? '+' : ''}${m.correctAnswer}</span>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    mistakeHtml = `
-                        <div class="mt-4 p-4 bg-green-500/10 rounded-2xl border border-green-500/20">
-                            <p class="text-green-400 text-sm font-bold">Perfect Accuracy! ✨</p>
-                        </div>
-                    `;
-                }
+/* =================== QUESTION BANK ===================
+   f: formula (^ starts the charge), t: element asked for,
+   p: parts [symbol, count, known oxidation state (null = the one asked for), group-ion name?]
+   type: element | ion | compound | polyion | exception ; std: answer if the usual O/H/F rule were wrongly used */
+function Q(f, t, p, type, extra) { var q = { f: f, t: t, p: p, type: type }; for (var k in extra || {}) q[k] = extra[k]; return q; }
+var E = "element", I = "ion", C = "compound", P = "polyion", X = "exception";
+var BANK = {
+  1: [
+    Q("O2", "O", [["O", 2, null]], E), Q("Cl2", "Cl", [["Cl", 2, null]], E), Q("Na", "Na", [["Na", 1, null]], E),
+    Q("P4", "P", [["P", 4, null]], E), Q("S8", "S", [["S", 8, null]], E), Q("Zn", "Zn", [["Zn", 1, null]], E), Q("N2", "N", [["N", 2, null]], E),
+    Q("Na^+", "Na", [["Na", 1, null]], I), Q("Fe^3+", "Fe", [["Fe", 1, null]], I), Q("Cl^-", "Cl", [["Cl", 1, null]], I),
+    Q("O^2-", "O", [["O", 1, null]], I), Q("Cu^2+", "Cu", [["Cu", 1, null]], I), Q("S^2-", "S", [["S", 1, null]], I),
+    Q("Al^3+", "Al", [["Al", 1, null]], I), Q("N^3-", "N", [["N", 1, null]], I),
+    Q("H2O", "H", [["H", 2, null], ["O", 1, -2]], C), Q("HF", "F", [["H", 1, 1], ["F", 1, null]], C),
+    Q("MgO", "O", [["Mg", 1, 2], ["O", 1, null]], C), Q("NaCl", "Cl", [["Na", 1, 1], ["Cl", 1, null]], C), Q("K2O", "K", [["K", 2, null], ["O", 1, -2]], C)
+  ],
+  2: [
+    Q("CO2", "C", [["C", 1, null], ["O", 2, -2]], C), Q("CO", "C", [["C", 1, null], ["O", 1, -2]], C), Q("CH4", "C", [["C", 1, null], ["H", 4, 1]], C),
+    Q("NH3", "N", [["N", 1, null], ["H", 3, 1]], C), Q("NO2", "N", [["N", 1, null], ["O", 2, -2]], C), Q("NO", "N", [["N", 1, null], ["O", 1, -2]], C),
+    Q("N2O", "N", [["N", 2, null], ["O", 1, -2]], C), Q("SO2", "S", [["S", 1, null], ["O", 2, -2]], C), Q("SO3", "S", [["S", 1, null], ["O", 3, -2]], C),
+    Q("Fe2O3", "Fe", [["Fe", 2, null], ["O", 3, -2]], C), Q("FeCl3", "Fe", [["Fe", 1, null], ["Cl", 3, -1]], C), Q("FeO", "Fe", [["Fe", 1, null], ["O", 1, -2]], C),
+    Q("Cu2O", "Cu", [["Cu", 2, null], ["O", 1, -2]], C), Q("MnO2", "Mn", [["Mn", 1, null], ["O", 2, -2]], C), Q("PCl5", "P", [["P", 1, null], ["Cl", 5, -1]], C),
+    Q("PCl3", "P", [["P", 1, null], ["Cl", 3, -1]], C), Q("SF6", "S", [["S", 1, null], ["F", 6, -1]], C), Q("TiO2", "Ti", [["Ti", 1, null], ["O", 2, -2]], C),
+    Q("Al2O3", "Al", [["Al", 2, null], ["O", 3, -2]], C), Q("P2O5", "P", [["P", 2, null], ["O", 5, -2]], C), Q("H2S", "S", [["H", 2, 1], ["S", 1, null]], C),
+    Q("MgBr2", "Mg", [["Mg", 1, null], ["Br", 2, -1]], C), Q("NiCl2", "Ni", [["Ni", 1, null], ["Cl", 2, -1]], C)
+  ],
+  3: [
+    Q("H2SO4", "S", [["H", 2, 1], ["S", 1, null], ["O", 4, -2]], C), Q("HNO3", "N", [["H", 1, 1], ["N", 1, null], ["O", 3, -2]], C),
+    Q("KMnO4", "Mn", [["K", 1, 1], ["Mn", 1, null], ["O", 4, -2]], C), Q("KClO3", "Cl", [["K", 1, 1], ["Cl", 1, null], ["O", 3, -2]], C),
+    Q("NaNO2", "N", [["Na", 1, 1], ["N", 1, null], ["O", 2, -2]], C), Q("H3PO4", "P", [["H", 3, 1], ["P", 1, null], ["O", 4, -2]], C),
+    Q("NaClO", "Cl", [["Na", 1, 1], ["Cl", 1, null], ["O", 1, -2]], C), Q("K2MnO4", "Mn", [["K", 2, 1], ["Mn", 1, null], ["O", 4, -2]], C),
+    Q("Na2SO3", "S", [["Na", 2, 1], ["S", 1, null], ["O", 3, -2]], C), Q("Na2CO3", "C", [["Na", 2, 1], ["C", 1, null], ["O", 3, -2]], C),
+    Q("NH4Cl", "N", [["N", 1, null], ["H", 4, 1], ["Cl", 1, -1]], C),
+    Q("CuSO4", "Cu", [["Cu", 1, null], ["SO4", 1, -2, "sulfate ion"]], C), Q("FeSO4", "Fe", [["Fe", 1, null], ["SO4", 1, -2, "sulfate ion"]], C),
+    Q("Fe(OH)3", "Fe", [["Fe", 1, null], ["OH", 3, -1, "hydroxide ion"]], C), Q("Cu(NO3)2", "Cu", [["Cu", 1, null], ["NO3", 2, -1, "nitrate ion"]], C),
+    Q("Ca3(PO4)2", "P", [["Ca", 3, 2], ["P", 2, null], ["O", 8, -2]], C), Q("Al2(SO4)3", "S", [["Al", 2, 3], ["S", 3, null], ["O", 12, -2]], C)
+  ],
+  4: [
+    Q("NO3^-", "N", [["N", 1, null], ["O", 3, -2]], P), Q("SO4^2-", "S", [["S", 1, null], ["O", 4, -2]], P), Q("PO4^3-", "P", [["P", 1, null], ["O", 4, -2]], P),
+    Q("ClO3^-", "Cl", [["Cl", 1, null], ["O", 3, -2]], P), Q("CO3^2-", "C", [["C", 1, null], ["O", 3, -2]], P), Q("NH4^+", "N", [["N", 1, null], ["H", 4, 1]], P),
+    Q("CrO4^2-", "Cr", [["Cr", 1, null], ["O", 4, -2]], P), Q("MnO4^-", "Mn", [["Mn", 1, null], ["O", 4, -2]], P), Q("MnO4^2-", "Mn", [["Mn", 1, null], ["O", 4, -2]], P),
+    Q("ClO4^-", "Cl", [["Cl", 1, null], ["O", 4, -2]], P), Q("SO3^2-", "S", [["S", 1, null], ["O", 3, -2]], P), Q("NO2^-", "N", [["N", 1, null], ["O", 2, -2]], P),
+    Q("BrO3^-", "Br", [["Br", 1, null], ["O", 3, -2]], P), Q("OH^-", "O", [["O", 1, null], ["H", 1, 1]], P), Q("ClO^-", "Cl", [["Cl", 1, null], ["O", 1, -2]], P),
+    Q("HCO3^-", "C", [["H", 1, 1], ["C", 1, null], ["O", 3, -2]], P)
+  ]
+};
+// Level 5 mixes the hardest of levels 3 and 4
+BANK[5] = BANK[3].concat(BANK[4]);
+// Bosses: levels 1–2 get tough "standard" substances; levels 3–5 add peroxides, hydrides and fluorine exceptions
+var BOSS_A = [
+  Q("Cr2O7^2-", "Cr", [["Cr", 2, null], ["O", 7, -2]], P), Q("K2Cr2O7", "Cr", [["K", 2, 1], ["Cr", 2, null], ["O", 7, -2]], C),
+  Q("C2O4^2-", "C", [["C", 2, null], ["O", 4, -2]], P), Q("Cl2O7", "Cl", [["Cl", 2, null], ["O", 7, -2]], C),
+  Q("S2O3^2-", "S", [["S", 2, null], ["O", 3, -2]], P), Q("Na2S2O3", "S", [["Na", 2, 1], ["S", 2, null], ["O", 3, -2]], C)
+];
+var BOSS_B = [
+  Q("H2O2", "O", [["H", 2, 1], ["O", 2, null]], X, { std: -2, why: "H₂O₂ is a peroxide, so O is −1, not −2." }),
+  Q("Na2O2", "O", [["Na", 2, 1], ["O", 2, null]], X, { std: -2, why: "Na₂O₂ is a peroxide, so O is −1, not −2." }),
+  Q("BaO2", "O", [["Ba", 1, 2], ["O", 2, null]], X, { std: -2, why: "BaO₂ is a peroxide (Ba is always +2), so O is −1." }),
+  Q("LiH", "H", [["Li", 1, 1], ["H", 1, null]], X, { std: 1, why: "LiH is a metal hydride, so H is −1, not +1." }),
+  Q("NaH", "H", [["Na", 1, 1], ["H", 1, null]], X, { std: 1, why: "NaH is a metal hydride, so H is −1, not +1." }),
+  Q("CaH2", "H", [["Ca", 1, 2], ["H", 2, null]], X, { std: 1, why: "CaH₂ is a metal hydride, so H is −1, not +1." }),
+  Q("OF2", "O", [["O", 1, null], ["F", 2, -1]], X, { std: -2, why: "Fluorine is always −1 and wins over oxygen, so O is +2 here." })
+];
+var TYPE_NAMES = { element: "Elements", ion: "Simple ions", compound: "Compounds", polyion: "Polyatomic ions", exception: "Peroxides & hydrides", detective: "Redox Detective" };
 
-                container.innerHTML = `
-                    <div class="w-full h-full flex flex-col pt-2">
-                        <h2 class="text-3xl font-extrabold text-blue-400">Time's Up!</h2>
-                        
-                        <div class="flex justify-center gap-6 py-4">
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 uppercase">Final Score</p>
-                                <p class="text-4xl font-bold text-white">${score}</p>
-                            </div>
-                            <div class="text-center border-l border-slate-700 pl-6">
-                                <p class="text-[10px] text-slate-400 uppercase">High Score</p>
-                                <p class="text-4xl font-bold text-yellow-500">${highScore}</p>
-                            </div>
-                        </div>
+function charge(f) {
+  var m = f.split("^")[1]; if (!m) return 0;
+  var sign = m.slice(-1) === "-" ? -1 : 1, n = m.slice(0, -1); return sign * (n ? parseInt(n, 10) : 1);
+}
+function solve(q) {
+  var z = charge(q.f), others = 0, nT = 0, othersNoSub = 0;
+  q.p.forEach(function (x) { if (x[2] === null) nT += x[1]; else { others += x[1] * x[2]; othersNoSub += x[2]; } });
+  q.z = z; q.nT = nT; q.others = others;
+  q.a = (z - others) / nT;
+  q.noSubs = z - othersNoSub;                 // answer if the subscripts were ignored
+  q.noCharge = z ? (0 - others) / nT : null;  // answer if the ion's charge was ignored
+  return q;
+}
+[1, 2, 3, 4].forEach(function (l) { BANK[l].forEach(solve); });
+BOSS_A.forEach(solve); BOSS_B.forEach(solve);
 
-                        ${isNewHigh ? '<p class="text-green-400 text-xs font-bold animate-bounce mb-2">★ NEW RECORD ★</p>' : ''}
-                        
-                        <div class="flex-grow overflow-hidden flex flex-col">
-                            ${mistakeHtml}
-                        </div>
+/* =================== REDOX DETECTIVE =================== */
+// s: reactant species shown as buttons [formula, coefficient], ox/red: index of species oxidised/reduced, ch: the changes
+var DET = [
+  { eq: [["Zn"], ["Cu^2+"], "→", ["Zn^2+"], ["Cu"]], ox: 0, red: 1, ch: ["Zn: 0 → +2 (increases, oxidised)", "Cu: +2 → 0 (decreases, reduced)"] },
+  { eq: [["Mg"], ["H^+", 2], "→", ["Mg^2+"], ["H2"]], ox: 0, red: 1, ch: ["Mg: 0 → +2 (oxidised)", "H: +1 → 0 (reduced)"] },
+  { eq: [["Cl2"], ["Br^-", 2], "→", ["Cl^-", 2], ["Br2"]], ox: 1, red: 0, ch: ["Br: −1 → 0 (oxidised)", "Cl: 0 → −1 (reduced)"] },
+  { eq: [["Fe^2+", 2], ["Cl2"], "→", ["Fe^3+", 2], ["Cl^-", 2]], ox: 0, red: 1, ch: ["Fe: +2 → +3 (oxidised)", "Cl: 0 → −1 (reduced)"] },
+  { eq: [["CuO"], ["H2"], "→", ["Cu"], ["H2O"]], ox: 1, red: 0, ch: ["H: 0 → +1 (oxidised)", "Cu: +2 → 0 (reduced)"] },
+  { eq: [["Mg", 2], ["O2"], "→", ["MgO", 2]], ox: 0, red: 1, ch: ["Mg: 0 → +2 (oxidised)", "O: 0 → −2 (reduced)"] },
+  { eq: [["Fe2O3"], ["CO", 3], "→", ["Fe", 2], ["CO2", 3]], ox: 1, red: 0, ch: ["C: +2 → +4 (oxidised)", "Fe: +3 → 0 (reduced)"] },
+  { eq: [["KI", 2], ["Cl2"], "→", ["KCl", 2], ["I2"]], ox: 0, red: 1, ch: ["I: −1 → 0 (oxidised)", "Cl: 0 → −1 (reduced)"] },
+  { eq: [["Cu"], ["Ag^+", 2], "→", ["Cu^2+"], ["Ag", 2]], ox: 0, red: 1, ch: ["Cu: 0 → +2 (oxidised)", "Ag: +1 → 0 (reduced)"] },
+  { eq: [["Na", 2], ["Cl2"], "→", ["NaCl", 2]], ox: 0, red: 1, ch: ["Na: 0 → +1 (oxidised)", "Cl: 0 → −1 (reduced)"] },
+  { eq: [["Zn"], ["HCl", 2], "→", ["ZnCl2"], ["H2"]], ox: 0, red: 1, ch: ["Zn: 0 → +2 (oxidised)", "H: +1 → 0 (reduced)"] },
+  { eq: [["SO2", 2], ["O2"], "→", ["SO3", 2]], ox: 0, red: 1, ch: ["S: +4 → +6 (oxidised)", "O: 0 → −2 (reduced)"] },
+  { eq: [["Fe^2+", 5], ["MnO4^-"], ["H^+", 8], "→", ["Fe^3+", 5], ["Mn^2+"], ["H2O", 4]], ox: 0, red: 1, spect: 2, ch: ["Fe: +2 → +3 (oxidised)", "Mn: +7 → +2 (reduced)", "H stays +1, so H⁺ is neither"] },
+  { eq: [["Cl2"], ["I^-", 2], "→", ["Cl^-", 2], ["I2"]], ox: 1, red: 0, ch: ["I: −1 → 0 (oxidised)", "Cl: 0 → −1 (reduced)"] }
+];
 
-                        <div class="flex gap-3 w-full mt-4">
-                            <button onclick="resetGame()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-all border border-slate-600 text-sm">
-                                Home
-                            </button>
-                            <button onclick="startQuiz()" class="flex-[2] bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg text-sm">
-                                Play Again
-                            </button>
-                        </div>
-                    </div>
-                `;
+/* =================== HELPERS =================== */
+var $ = function (id) { return document.getElementById(id); };
+function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+function fx(f) {
+  var m = String(f).split("^");
+  var body = esc(m[0]).replace(/([A-Za-z\)])(\d+)/g, '$1<span class="sub">$2</span>');
+  return body + (m[1] ? '<span class="sup">' + esc(m[1]).replace("-", "−") + "</span>" : "");
+}
+function plain(f) { return String(f).replace(/\^(.*)$/, "($1)"); }
+function sgn(n) { return n > 0 ? "+" + n : n < 0 ? "−" + (-n) : "0"; }
+function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem("sik:" + k)); localStorage.setItem("sik:" + k, JSON.stringify(v)); } catch (e) { return null; } }
+function mmss(s) { s = Math.round(s); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
 
-                if (isNewHigh) {
-                    highScore = score;
-                    localStorage.setItem('oxi_highScore', highScore);
-                    setTimeout(createConfetti, 300);
-                }
-            }
-            lucide.createIcons();
-        }
+/* =================== WORKED SOLUTIONS =================== */
+function working(q) {
+  if (q.type === "element") return ["<b>" + fx(q.f) + "</b> is an uncombined element, so every atom is <b>0</b>."];
+  if (q.type === "ion") return ["A simple ion's oxidation state equals its charge.", "<b>" + esc(q.t) + " = " + sgn(q.a) + "</b>"];
+  var lines = [], known = [], terms = [];
+  q.p.forEach(function (x) {
+    if (x[2] === null) { terms.push((x[1] > 1 ? x[1] : "") + esc(q.t)); return; }
+    known.push(x[3] ? fx(x[0]) + " (" + x[3] + ") = " + sgn(x[2]) : esc(x[0]) + " = " + sgn(x[2]));
+    terms.push(x[1] > 1 ? x[1] + "(" + sgn(x[2]) + ")" : "(" + sgn(x[2]) + ")");
+  });
+  lines.push("Known: " + known.join(", "));
+  lines.push(terms.join(" + ") + " = " + sgn(q.z) + (q.z ? " (the ion's charge)" : " (neutral)"));
+  if (q.nT > 1) lines.push(q.nT + esc(q.t) + " = " + sgn(q.z) + " − (" + sgn(q.others) + ") = " + sgn(q.a * q.nT) + ", so <b>" + esc(q.t) + " = " + sgn(q.a) + "</b>");
+  else lines.push("<b>" + esc(q.t) + " = " + sgn(q.z) + " − (" + sgn(q.others) + ") = " + sgn(q.a) + "</b>");
+  if (q.why) lines.push(esc(q.why));
+  return lines;
+}
 
-        /** FLOW FUNCTIONS **/
-        function startTutorial() {
-            audioCtx.resume();
-            state = 'TUTORIAL';
-            tutorialIndex = 0;
-            render();
-        }
+/* =================== DIAGNOSIS =================== */
+var ERR = {
+  timeout:    { label: "Ran out of time", tip: "Write the sum quickly: (count × state) for each element adds up to the overall charge." },
+  noSign:     { label: "Left out the + or − sign", tip: "Always write the sign for oxidation states, e.g. +3 or −2." },
+  sign:       { label: "Got the sign the wrong way round", tip: "Check: the target's total must balance the others. If the others add up to negative, the target is positive." },
+  notDivided: { label: "Forgot to divide by the number of atoms", tip: "If there are 2 Cr atoms, the total for Cr is shared: divide by 2." },
+  noCharge:   { label: "Ignored the ion's charge", tip: "For an ion, the oxidation states add up to the ion's charge, not 0." },
+  noSubs:     { label: "Forgot to multiply by the subscripts", tip: "O₄ means 4 × (−2) = −8. Multiply each state by the number of atoms." },
+  exception:  { label: "Used the usual O or H rule on a peroxide, hydride or fluoride", tip: "Peroxides: O = −1. Metal hydrides: H = −1. With fluorine, F = −1 always comes first." },
+  element:    { label: "Gave an uncombined element a non-zero state", tip: "Elements on their own (O₂, Zn, S₈) are always 0." },
+  ion:        { label: "Didn't use the charge of a simple ion", tip: "For a simple ion like Fe³⁺, the oxidation state is just its charge: +3." },
+  other:      { label: "Calculation slip", tip: "Set it out: write each element's state × count, add them, and make the total equal the charge." },
+  detSwap:    { label: "Swapped oxidised and reduced", tip: "Oxidised = oxidation state goes UP (loses electrons). Reduced = goes DOWN (gains electrons)." },
+  detOx:      { label: "Couldn't spot what was oxidised", tip: "Work out the state before and after. The one that increases is oxidised." },
+  detRed:     { label: "Couldn't spot what was reduced", tip: "Work out the state before and after. The one that decreases is reduced." },
+  detSpect:   { label: "Picked a spectator (no change in state)", tip: "If an element's oxidation state doesn't change, it's neither oxidised nor reduced." }
+};
+function diagnose(q, typed, timedOut) {
+  if (timedOut && typed == null) return ["timeout"];
+  var val = typed.val, a = q.a;
+  if (val === a) return typed.noSign && a !== 0 ? ["noSign"] : [];
+  if (q.type === "element") return ["element"];
+  if (typed.noSign && Math.abs(val) === Math.abs(a)) return ["noSign"];
+  if (q.type === "exception" && val === q.std) return ["exception"];
+  if (a !== 0 && val === -a) return ["sign"];
+  if (q.type === "ion") return ["ion"];
+  if (q.nT > 1 && val === a * q.nT) return ["notDivided"];
+  if (q.noCharge !== null && val === q.noCharge) return ["noCharge"];
+  if (q.noSubs !== a && val === q.noSubs) return ["noSubs"];
+  return ["other"];
+}
 
-        function checkTutorial(val) {
-            const step = tutorialSteps[tutorialIndex];
-            if (val === step.answer) {
-                flashOverlay('correct');
-                sounds.correct();
-                if (tutorialIndex < tutorialSteps.length - 1) {
-                    tutorialIndex++;
-                    render();
-                } else {
-                    showReadyPopup();
-                }
-            } else {
-                flashOverlay('wrong');
-                sounds.wrong();
-            }
-        }
+/* =================== SOUND & MUSIC =================== */
+var Sound = {
+  on: store("sfx") !== false, ctx: null,
+  tone: function (f, type, d, g, delay) {
+    if (!this.on) return;
+    try {
+      this.ctx = this.ctx || new (window.AudioContext || window.webkitAudioContext)();
+      if (this.ctx.state === "suspended") this.ctx.resume();
+      var t = this.ctx.currentTime + (delay || 0), o = this.ctx.createOscillator(), v = this.ctx.createGain();
+      o.type = type; o.frequency.setValueAtTime(f, t); v.gain.setValueAtTime(g, t); v.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(v); v.connect(this.ctx.destination); o.start(t); o.stop(t + d);
+    } catch (e) {}
+  },
+  key: function () { this.tone(440, "sine", .05, .04); },
+  ok: function () { this.tone(660, "sine", .15, .18); this.tone(880, "sine", .25, .18, .08); },
+  no: function () { this.tone(220, "sawtooth", .2, .12); this.tone(110, "sawtooth", .35, .12, .05); },
+  up: function () { [523, 659, 784, 1047].forEach(function (n, i) { Sound.tone(n, "triangle", .3, .16, i * .08); }); },
+  end: function () { [523, 659, 784, 1047, 1319].forEach(function (n, i) { Sound.tone(n, "triangle", .35, .16, i * .09); }); }
+};
+var Music = {
+  el: $("music"), on: store("music") !== false,
+  play: function () { if (!this.on) return; try { this.el.volume = .2; var p = this.el.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} },
+  stop: function () { try { this.el.pause(); this.el.currentTime = 0; } catch (e) {} }
+};
+function paintToggles() {
+  $("btn-music").classList.toggle("off", !Music.on); $("btn-music").setAttribute("aria-label", Music.on ? "Music on" : "Music off");
+  $("btn-sound").classList.toggle("off", !Sound.on); $("btn-sound").setAttribute("aria-label", Sound.on ? "Sound effects on" : "Sound effects off");
+}
+$("btn-music").addEventListener("click", function () {
+  Music.on = !Music.on; store("music", Music.on); paintToggles();
+  if (!Music.on) Music.el.pause(); else if (G && G.mode !== "done" && !$("scr-play").hidden) Music.play();
+});
+$("btn-sound").addEventListener("click", function () { Sound.on = !Sound.on; store("sfx", Sound.on); paintToggles(); });
+paintToggles();
+if (document.fullscreenEnabled) {
+  $("btn-full").hidden = false;
+  $("btn-full").addEventListener("click", function () { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(function () {}); });
+}
 
-        function showReadyPopup() {
-            document.getElementById('readyPopup').classList.remove('hidden');
-            lucide.createIcons();
-        }
+/* =================== SCREENS =================== */
+var G = null;
+var SCREENS = ["scr-start", "scr-msg", "scr-play", "scr-result"];
+function show(id) { SCREENS.forEach(function (s) { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
+function message(o) {
+  $("msg-pill").textContent = o.pill; $("msg-title").textContent = o.title; $("msg-text").innerHTML = o.text || "";
+  $("msg-rules").innerHTML = (o.rules || []).map(function (r) { return '<div class="rule">' + r + "</div>"; }).join("");
+  $("msg-btn").textContent = o.btn; $("msg-btn").onclick = o.go;
+  show("scr-msg"); $("msg-btn").focus({ preventScroll: true });
+}
 
-        function hideReadyPopupAndStart() {
-            document.getElementById('readyPopup').classList.add('hidden');
-            startQuiz();
-        }
+/* ---- start form ---- */
+(function () {
+  var sel = $("in-cls");
+  CLASSES.forEach(function (c) { var o = document.createElement("option"); o.textContent = c; sel.appendChild(o); });
+  var s = store("student") || {};
+  if (s.name) $("in-name").value = s.name;
+  if (s.cls && CLASSES.indexOf(s.cls) > -1) sel.value = s.cls;
+  if (s.reg) $("in-reg").value = s.reg;
+  $("txt-best").textContent = store("oxi-best") || 0;
+})();
+var lastMode = "challenge";
+Array.prototype.forEach.call(document.querySelectorAll("#form-start [data-mode]"), function (b) { b.addEventListener("click", function () { lastMode = b.dataset.mode; }); });
+$("form-start").addEventListener("submit", function (e) {
+  e.preventDefault();
+  var mode = (e.submitter && e.submitter.dataset.mode) || lastMode;
+  var name = $("in-name").value.trim(), cls = $("in-cls").value, reg = $("in-reg").value.trim();
+  var err = !name ? "Please type your name." : !cls ? "Please choose your class." : !/^\d{1,2}$/.test(reg) ? "Please type your register number (numbers only)." : "";
+  $("form-err").textContent = err;
+  if (err) return;
+  store("student", { name: name, cls: cls, reg: reg });
+  Sound.tone(1, "sine", .01, .0001);
+  newGame({ name: name, cls: cls, reg: reg });
+  if (mode === "tutorial") startTutorial(); else startChallenge();
+});
 
-        function startQuiz() {
-            audioCtx.resume();
-            state = 'QUIZ';
-            score = 0;
-            combo = 0;
-            timeLeft = totalQuizTime;
-            inputBuffer = "";
-            mistakes = [];
-            const music = document.getElementById('bgMusic');
-            music.volume = 0.2;
-            music.play().catch(() => {});
-            nextProblem();
-            updateStats();
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                const bar = document.getElementById('timerBar');
-                const display = document.getElementById('timerDisplay');
-                if (display) display.innerText = `${timeLeft}s`;
-                if (bar) bar.style.width = `${(timeLeft / totalQuizTime) * 100}%`;
-                if (timeLeft <= 0) endGame();
-            }, 1000);
-            render();
-        }
+function newGame(student) {
+  G = { student: student, mode: "", points: 0, streak: 0, bestStreak: 0, lives: LIVES, level: 1, idx: 0, levelReached: 1,
+        log: [], used: {}, startedAt: 0, inp: { sign: "", digit: "" }, busy: false, timer: null };
+}
 
-        function nextProblem() {
-            let lastProblem = currentProblem;
-            do {
-                currentProblem = quizData[Math.floor(Math.random() * quizData.length)];
-            } while (currentProblem === lastProblem);
-            inputBuffer = "";
-            render();
-        }
+/* =================== TUTORIAL =================== */
+var TUT = [
+  { rule: "Free elements", text: "Atoms in their uncombined state always have an oxidation state of 0.", q: BANK[1][0] },
+  { rule: "Simple ions", text: "A simple ion's oxidation state equals its charge.", q: BANK[1][7] },
+  { rule: "Fluorine rule", text: "Fluorine is always −1 in its compounds.", q: BANK[1][16] },
+  { rule: "Hydrogen rule", text: "Hydrogen is +1 in compounds (except in metal hydrides, where it is −1).", q: BANK[1][15] },
+  { rule: "Oxygen rule", text: "Oxygen is usually −2 in compounds (except in peroxides, where it is −1).", q: BANK[1][17] },
+  { rule: "Sum rule: compounds", text: "In a neutral compound, the oxidation states add up to 0.", q: BANK[2][0] },
+  { rule: "Sum rule: ions", text: "In a polyatomic ion, the oxidation states add up to the ion's charge.", q: BANK[4][1] }
+];
+function startTutorial() { G.mode = "tutorial"; G.idx = 0; show("scr-play"); setHud(); loadTutorial(); }
+function loadTutorial() {
+  var step = TUT[G.idx];
+  G.q = step.q; G.busy = false;
+  $("rulebox").hidden = false; $("rule-title").textContent = "Rule " + (G.idx + 1) + " of " + TUT.length + ": " + step.rule; $("rule-text").textContent = step.text;
+  renderQuestion(step.q, false);
+  showPad();
+}
 
-        function handleKeypad(val) {
-            sounds.click();
-            if (val === '+' || val === '-') {
-                if (inputBuffer === "") {
-                    inputBuffer = val;
-                } else if (inputBuffer.startsWith('+') || inputBuffer.startsWith('-')) {
-                    inputBuffer = val + inputBuffer.substring(1);
-                } else {
-                    inputBuffer = val + inputBuffer;
-                }
-            } else {
-                let digitsOnly = inputBuffer.replace(/[+-]/g, '');
-                if (digitsOnly.length < 2) {
-                    inputBuffer += val;
-                }
-            }
-            render();
-        }
+/* =================== CHALLENGE =================== */
+function startChallenge() {
+  G.mode = "challenge"; G.level = 1; G.idx = 0; G.lives = LIVES; G.levelReached = 1;
+  if (!G.startedAt) G.startedAt = Date.now();
+  $("rulebox").hidden = true;
+  show("scr-play"); Music.play(); setHud(); loadQuestion();
+}
+function pickQuestion() {
+  var boss = G.idx === PER_LEVEL - 1, pool;
+  if (boss) pool = G.level <= 2 ? BOSS_A : BOSS_B.concat(BOSS_A);
+  else pool = BANK[G.level];
+  var fresh = pool.filter(function (q) { return !G.used[q.f + q.t]; });
+  if (!fresh.length) fresh = pool;
+  if (boss && G.level >= 3) { var ex = fresh.filter(function (q) { return q.type === "exception"; }); if (ex.length && Math.random() < .7) fresh = ex; }
+  var q = fresh[Math.floor(Math.random() * fresh.length)];
+  G.used[q.f + q.t] = 1;
+  return { q: q, boss: boss };
+}
+function loadQuestion() {
+  var pick = pickQuestion();
+  G.q = pick.q; G.boss = pick.boss; G.busy = false;
+  setHud();
+  renderQuestion(G.q, G.boss);
+  showPad();
+  runTimer(G.boss ? SECONDS_BOSS : SECONDS);
+}
 
-        function clearInput() {
-            inputBuffer = "";
-            render();
-        }
+function renderQuestion(q, boss) {
+  var card = $("qcard");
+  card.className = "qcard" + (boss ? " boss" : "");
+  card.innerHTML = (boss ? '<span class="boss-tag">BOSS</span>' : "") +
+    '<small>Oxidation state of <span class="t">' + esc(q.t) + "</span> in</small>" +
+    '<span class="fml">' + fx(q.f) + "</span>";
+}
 
-        function submitAnswer() {
-            if (inputBuffer === "" || inputBuffer === "+" || inputBuffer === "-") return;
-            let userVal = parseInt(inputBuffer);
-            if (isNaN(userVal)) return;
-            if (userVal === currentProblem.a) {
-                flashOverlay('correct');
-                sounds.correct();
-                combo++;
-                const pointsGained = 10 * combo;
-                score += pointsGained;
-                showPointPop(pointsGained);
-                updateStats();
-                nextProblem();
-            } else {
-                flashOverlay('wrong');
-                sounds.wrong();
-                mistakes.push({
-                    formula: currentProblem.f,
-                    target: currentProblem.t,
-                    userAnswer: userVal,
-                    correctAnswer: currentProblem.a
-                });
-                combo = 0;
-                updateStats();
-                inputBuffer = "";
-                render();
-            }
-        }
+function setHud() {
+  var tut = G.mode === "tutorial", det = G.mode === "detective";
+  $("txt-points").textContent = G.points;
+  $("txt-lvl").textContent = tut ? "Tutorial" : det ? "Detective" : "Level " + G.level;
+  $("hud-mid").hidden = tut || det;
+  $("hud-time").hidden = tut;
+  $("ladder").hidden = det;
+  var h = "";
+  for (var i = 0; i < LIVES; i++) h += '<svg viewBox="0 0 24 24"><use href="#heart" fill="' + (i < G.lives ? "#FF8243" : "#FFFFFF") + '" stroke="#1F2A2E" stroke-width="2"/></svg>';
+  $("hearts").innerHTML = h; $("hearts").setAttribute("aria-label", G.lives + " lives left");
+  $("hearts").hidden = det;
+  var lad = $("ladder").children;
+  for (var j = 0; j < lad.length; j++) lad[j].className = j < G.level - 1 ? "done" : j === G.level - 1 ? (G.idx === PER_LEVEL - 1 ? "boss" : "now") : "";
+  var c = $("txt-combo"); c.hidden = G.streak < 2; if (G.streak >= 2) c.textContent = Math.min(G.streak, 3) + "× combo";
+}
 
-        function showPointPop(pts) {
-            const container = document.getElementById('pointFloatContainer');
-            if (!container) return;
-            const el = document.createElement('div');
-            el.className = 'point-pop text-green-400 font-bold text-xl';
-            el.innerText = `+${pts}`;
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 600);
-        }
+/* ---- timer ---- */
+function runTimer(total) {
+  cancelAnimationFrame(G.timer);
+  var t0 = performance.now(), bar = $("bar-time"), txt = $("txt-secs"), last = -1;
+  G.qTotal = total; G.qLeft = total;
+  (function frame(now) {
+    now = now || performance.now();
+    var left = Math.max(0, total - (now - t0) / 1000);
+    G.qLeft = left;
+    bar.style.width = (left / total * 100) + "%";
+    bar.classList.toggle("warn", left <= 5);
+    var s = Math.ceil(left); if (s !== last) { txt.textContent = s + "s"; last = s; }
+    if (left <= 0) { timeUp(); return; }
+    G.timer = requestAnimationFrame(frame);
+  })();
+}
+function stopTimer() { cancelAnimationFrame(G.timer); }
+function timeUp() { if (G.mode === "detective") detAnswer(null, true); else answer(true); }
 
-        function updateStats() {
-            const scoreDisp = document.getElementById('scoreDisplay');
-            const comboBadge = document.getElementById('comboBadge');
-            if (scoreDisp) scoreDisp.innerText = score;
-            if (comboBadge) {
-                if (combo > 1) {
-                    comboBadge.classList.remove('hidden');
-                    comboBadge.innerText = `x${combo}`;
-                } else {
-                    comboBadge.classList.add('hidden');
-                }
-            }
-        }
+/* ---- keypad ---- */
+function showPad() {
+  G.inp = { sign: "", digit: "" }; paintInput();
+  $("ctl-pad").hidden = false; $("ctl-det").hidden = true; $("fb").hidden = true; $("flash").hidden = true;
+}
+function paintInput() {
+  var s = G.inp.sign === "-" ? "−" : G.inp.sign, v = s + G.inp.digit, el = $("ans");
+  el.textContent = v || "?"; el.classList.toggle("empty", !v);
+  var signs = document.querySelectorAll(".k.sign");
+  signs[0].classList.toggle("on", G.inp.sign === "+"); signs[1].classList.toggle("on", G.inp.sign === "-");
+}
+function key(k) {
+  if (!G || G.busy || $("ctl-pad").hidden || $("scr-play").hidden) return;
+  if (k === "go") { answer(false); return; }
+  Sound.key();
+  if (k === "del") { if (G.inp.digit) G.inp.digit = ""; else G.inp.sign = ""; }
+  else if (k === "+" || k === "-") G.inp.sign = G.inp.sign === k ? "" : k;
+  else G.inp.digit = k;
+  paintInput();
+}
+Array.prototype.forEach.call(document.querySelectorAll(".pad .k"), function (b) { b.addEventListener("click", function () { key(b.dataset.k); }); });
+document.addEventListener("keydown", function (e) {
+  if ($("scr-play").hidden) return;
+  if (!$("fb").hidden && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); $("btn-next").click(); return; }
+  if (/^[0-9]$/.test(e.key)) key(e.key);
+  else if (e.key === "+" || e.key === "=") key("+");
+  else if (e.key === "-" || e.key === "_") key("-");
+  else if (e.key === "Backspace") key("del");
+  else if (e.key === "Enter") { e.preventDefault(); key("go"); }
+});
 
-        function flashOverlay(type) {
-            const el = document.getElementById('overlay');
-            el.className = `fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 ${type === 'correct' ? 'correct-flash' : 'wrong-flash'} opacity-100`;
-            setTimeout(() => {
-                el.className = `fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 opacity-0`;
-            }, 300);
-        }
+function answer(timedOut) {
+  if (G.busy) return;
+  var typed = null;
+  if (G.inp.digit !== "") typed = { val: (G.inp.sign === "-" ? -1 : 1) * parseInt(G.inp.digit, 10), noSign: G.inp.sign === "" };
+  if (!typed && !timedOut) { var a = $("ans"); a.classList.remove("shake"); void a.offsetWidth; a.classList.add("shake"); return; }
+  G.busy = true; stopTimer();
+  var q = G.q, errs = diagnose(q, typed, timedOut), ok = errs.length === 0;
 
-        function endGame() {
-            clearInterval(timerInterval);
-            state = 'RESULT';
-            const music = document.getElementById('bgMusic');
-            music.pause();
-            music.currentTime = 0;
-            sounds.gameOver();
-            if (score > 0) sounds.fanfare();
-            render();
-        }
+  if (G.mode === "tutorial") {
+    if (ok) { Sound.ok(); flash("Correct! " + esc(q.t) + " = " + sgn(q.a), false); setTimeout(nextTutorial, 900); }
+    else {
+      Sound.no();
+      feedback(false, "Try again", "", working(q).slice(0, 1), ERR[errs[0]].tip, "Try again");
+      $("btn-next").onclick = function () { G.busy = false; showPad(); };
+    }
+    return;
+  }
 
-        function resetGame() {
-            state = 'START';
-            render();
-        }
+  var gained = 0;
+  if (ok) {
+    G.streak++; G.bestStreak = Math.max(G.bestStreak, G.streak);
+    gained = (50 * G.level + Math.round(G.qLeft) * 5) * (G.boss ? 2 : 1) * Math.min(G.streak, 3);
+    G.points += gained;
+  } else { G.streak = 0; G.lives--; }
+  G.log.push({ kind: "ox", q: q, type: q.type, level: G.level, boss: G.boss, typed: typed, ok: ok, errs: errs });
+  setHud();
+  if (!ok) { var hs = $("hearts").children; if (hs[G.lives]) hs[G.lives].classList.add("lost"); }
+  if (ok) { Sound.ok(); flash("Correct! +" + gained + (G.boss ? " · Boss beaten!" : ""), false); setTimeout(nextQuestion, 800); }
+  else {
+    Sound.no();
+    var shown = typed ? (typed.noSign ? String(typed.val) : sgn(typed.val)) : "";
+    feedback(false, timedOut && !typed ? "Time's up!" : "Not quite" + (shown ? " (you said " + esc(shown) + ")" : ""),
+      "Answer: <b class=\"ans\">" + esc(q.t) + " = " + sgn(q.a) + "</b>", working(q), ERR[errs[0]].tip,
+      G.lives > 0 ? "Next →" : "Out of lives →");
+    $("btn-next").onclick = nextQuestion;
+  }
+}
+function nextTutorial() {
+  G.busy = false;
+  if (G.idx < TUT.length - 1) { G.idx++; loadTutorial(); return; }
+  $("rulebox").hidden = true;
+  message({ pill: "Tutorial complete", title: "You're ready!", text: "Now take on the challenge: 5 levels, a boss at the end of each, and 3 lives. Each question has its own timer.", btn: "Start the challenge ▶", go: startChallenge });
+}
+function nextQuestion() {
+  if (G.lives <= 0) { endChallenge(false); return; }
+  if (G.idx < PER_LEVEL - 1) { G.idx++; loadQuestion(); return; }
+  if (G.level >= LEVELS) { endChallenge(true); return; }
+  G.level++; G.idx = 0; G.levelReached = G.level;
+  Sound.up(); setHud();
+  flash("Level " + G.level + " unlocked!", true);
+  setTimeout(loadQuestion, 1100);
+}
+function endChallenge(cleared) {
+  stopTimer(); Music.stop();
+  G.cleared = cleared;
+  message({
+    pill: cleared ? "All 5 levels cleared" : "Out of lives",
+    title: cleared ? "Oxidation State Master!" : "Challenge over — but you're not done!",
+    text: "Last stop: the <b>Redox Detective</b> round. Use oxidation states to find what is oxidised and what is reduced in " + DETECTIVE_ROUNDS + " reactions.",
+    rules: ["Oxidised: oxidation state goes <b>up</b> (loses electrons)", "Reduced: oxidation state goes <b>down</b> (gains electrons)", "No change in state? It's neither."],
+    btn: "Start detective round ▶", go: startDetective
+  });
+}
 
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-            }
-        }
+/* ---- feedback ---- */
+function feedback(ok, title, ans, lines, tip, btn) {
+  $("ctl-pad").hidden = true; $("ctl-det").hidden = true; $("flash").hidden = true;
+  var fb = $("fb"); fb.className = "feedback " + (ok ? "ok" : "no");
+  $("fb-title").innerHTML = title; $("fb-ans").innerHTML = ans; $("fb-ans").hidden = !ans;
+  $("fb-work").innerHTML = lines.map(function (l) { return "<span>" + l + "</span>"; }).join(""); $("fb-work").hidden = !lines.length;
+  $("fb-tip").textContent = tip || ""; $("fb-tip").hidden = !tip;
+  $("btn-next").textContent = btn;
+  fb.hidden = false;
+  $("btn-next").focus({ preventScroll: true });
+  fb.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+function flash(html, lvlup) {
+  $("ctl-pad").hidden = true; $("ctl-det").hidden = true; $("fb").hidden = true;
+  var f = $("flash"); f.className = "flash" + (lvlup ? " lvlup" : ""); f.innerHTML = html; f.hidden = false;
+}
 
-        function createConfetti() {
-            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.top = '-10px';
-                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                document.body.appendChild(confetti);
-                
-                const destinationY = 100 + Math.random() * 20;
-                const destinationX = (Math.random() - 0.5) * 300;
-                const rotation = Math.random() * 720;
-                const duration = 2000 + Math.random() * 3000;
+/* =================== REDOX DETECTIVE =================== */
+function startDetective() {
+  G.mode = "detective"; G.idx = 0; G.det = shuffle(DET).slice(0, DETECTIVE_ROUNDS);
+  show("scr-play"); Music.play(); setHud(); loadDetective();
+}
+function eqHtml(d) {
+  var L = [], R = [], side = L;
+  d.eq.forEach(function (s) { if (s === "→") side = R; else side.push((s[1] ? s[1] : "") + fx(s[0])); });
+  return L.join(" + ") + " → " + R.join(" + ");
+}
+function loadDetective() {
+  var d = G.det[G.idx]; G.d = d; G.busy = false; G.pickOx = null;
+  setHud();
+  $("txt-lvl").textContent = "Detective " + (G.idx + 1) + "/" + DETECTIVE_ROUNDS;
+  var card = $("qcard"); card.className = "qcard";
+  card.innerHTML = "<small>Reaction</small><span class=\"eqn\">" + eqHtml(d) + "</span>";
+  var reactants = []; for (var i = 0; i < d.eq.length && d.eq[i] !== "→"; i++) reactants.push(d.eq[i]);
+  G.reactants = reactants;
+  $("det-ask").innerHTML = 'Tap the substance that is <em class="o">oxidised</em>';
+  $("det-chips").innerHTML = reactants.map(function (s, i) { return '<button class="chip" type="button" data-i="' + i + '">' + fx(s[0]) + "</button>"; }).join("");
+  Array.prototype.forEach.call($("det-chips").children, function (b) { b.addEventListener("click", function () { detTap(+b.dataset.i, b); }); });
+  $("ctl-pad").hidden = true; $("ctl-det").hidden = false; $("fb").hidden = true; $("flash").hidden = true;
+  runTimer(SECONDS_DETECTIVE);
+}
+function detTap(i, btn) {
+  if (G.busy) return;
+  Sound.key();
+  if (G.pickOx === null) {
+    G.pickOx = i; btn.classList.add("ox"); btn.insertAdjacentHTML("beforeend", "<small>oxidised</small>"); btn.disabled = true;
+    $("det-ask").innerHTML = 'Now tap the substance that is <em class="r">reduced</em>';
+  } else { detAnswer(i, false); }
+}
+function detAnswer(redPick, timedOut) {
+  if (G.busy) return; G.busy = true; stopTimer();
+  var d = G.d, ox = G.pickOx, errs = [];
+  var okOx = ox === d.ox, okRed = redPick === d.red;
+  if (timedOut && (ox === null || redPick === null)) errs.push("timeout");
+  if (ox === d.red && redPick === d.ox) errs.push("detSwap");
+  else {
+    if (ox !== null && !okOx) errs.push(d.spect === ox ? "detSpect" : "detOx");
+    if (redPick !== null && redPick !== undefined && !okRed) errs.push(d.spect === redPick ? "detSpect" : "detRed");
+  }
+  var ok = okOx && okRed;
+  var gained = 0;
+  if (ok) { G.streak++; G.bestStreak = Math.max(G.bestStreak, G.streak); gained = (150 + Math.round(G.qLeft) * 5) * Math.min(G.streak, 3); G.points += gained; }
+  else G.streak = 0;
+  G.log.push({ kind: "det", d: d, type: "detective", ok: ok, errs: errs.length ? errs : (ok ? [] : ["other"]),
+    picked: [ox === null ? "-" : G.reactants[ox][0], redPick == null ? "-" : G.reactants[redPick][0]] });
+  setHud(); $("txt-lvl").textContent = "Detective " + (G.idx + 1) + "/" + DETECTIVE_ROUNDS;
+  if (ok) Sound.ok(); else Sound.no();
+  var R = G.reactants;
+  feedback(ok, ok ? "Case solved! +" + gained : (timedOut ? "Time's up!" : "Not quite"),
+    "Oxidised: <b>" + fx(R[d.ox][0]) + "</b> · Reduced: <b>" + fx(R[d.red][0]) + "</b>",
+    d.ch.map(esc), ok ? "" : ERR[(errs[0] || "detOx")].tip,
+    G.idx < DETECTIVE_ROUNDS - 1 ? "Next case →" : "See my results →");
+  $("btn-next").onclick = function () { if (G.idx < DETECTIVE_ROUNDS - 1) { G.idx++; loadDetective(); } else finish(); };
+}
 
-                confetti.animate([
-                    { transform: `translate3d(0, 0, 0) rotate(0deg)`, opacity: 1 },
-                    { transform: `translate3d(${destinationX}px, ${destinationY}vh, 0) rotate(${rotation}deg)`, opacity: 0 }
-                ], {
-                    duration: duration,
-                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
-                }).onfinish = () => confetti.remove();
-            }
-        }
+/* =================== RESULTS =================== */
+function summarise() {
+  var by = {}, errCount = {}, correct = 0;
+  G.log.forEach(function (x) {
+    var b = by[x.type] = by[x.type] || [0, 0]; b[1]++; if (x.ok) { b[0]++; correct++; }
+    x.errs.forEach(function (e) { errCount[e] = (errCount[e] || 0) + 1; });
+  });
+  var errs = Object.keys(errCount).sort(function (a, b) { return errCount[b] - errCount[a]; });
+  return { by: by, errCount: errCount, errs: errs, correct: correct, total: G.log.length };
+}
+function finish() {
+  G.mode = "done"; Music.stop();
+  var S = summarise(), pct = S.total ? Math.round(100 * S.correct / S.total) : 0, secs = (Date.now() - G.startedAt) / 1000;
+  if (G.points > (store("oxi-best") || 0)) store("oxi-best", G.points);
+  $("res-ring").style.setProperty("--p", pct); $("res-pct").textContent = pct + "%";
+  $("res-correct").textContent = S.correct + "/" + S.total;
+  $("res-level").textContent = G.cleared ? "5 ✓" : G.levelReached;
+  $("res-time").textContent = mmss(secs); $("res-points").textContent = G.points;
+  var first = G.student.name.split(" ")[0];
+  $("res-title").textContent = pct >= 80 ? "Brilliant work, " + first + "!" : pct >= 50 ? "Good effort, " + first + "!" : "Keep going, " + first + "!";
+  $("res-msg").textContent = (G.cleared ? "You cleared all 5 levels. " : "You reached Level " + G.levelReached + ". ") + "Best combo: " + G.bestStreak + " in a row.";
+  var order = ["element", "ion", "compound", "polyion", "exception", "detective"];
+  $("res-bars").innerHTML = order.filter(function (t) { return S.by[t]; }).map(function (t) {
+    var v = S.by[t], p = Math.round(100 * v[0] / v[1]);
+    return '<div class="bar-row"><span>' + TYPE_NAMES[t] + '</span><div class="bar"><i class="' + (p < 60 ? "low" : "") + '" style="width:' + p + '%"></i></div><span class="n">' + v[0] + "/" + v[1] + "</span></div>";
+  }).join("");
+  $("res-weak").innerHTML = S.errs.length
+    ? S.errs.slice(0, 4).map(function (e) { return "<li><b>" + esc(ERR[e].label) + (S.errCount[e] > 1 ? " ×" + S.errCount[e] : "") + "</b><span>" + esc(ERR[e].tip) + "</span></li>"; }).join("")
+    : '<li class="good"><b>Nothing to fix this time!</b><span>Try to beat your points score.</span></li>';
+  var wrong = G.log.filter(function (x) { return !x.ok; });
+  $("res-review").innerHTML = wrong.length ? wrong.map(function (x) {
+    if (x.kind === "det") return "<li>" + eqHtml(x.d) + '<br><span class="you">You: oxidised ' + fx(x.picked[0]) + ", reduced " + fx(x.picked[1]) + '</span> · <span class="key">oxidised ' + fx(x.d.eq[x.d.ox][0]) + ", reduced " + fx(x.d.eq[x.d.red][0]) + "</span></li>";
+    var you = x.typed ? (x.typed.noSign ? String(x.typed.val) : sgn(x.typed.val)) : "no answer";
+    return "<li>" + esc(x.q.t) + " in " + fx(x.q.f) + '<br><span class="you">You: ' + esc(you) + '</span> · <span class="key">' + sgn(x.q.a) + '</span><span class="how">' + working(x.q).slice(-1)[0] + "</span></li>";
+  }).join("") : "<li>No mistakes. Well done!</li>";
+  show("scr-result"); Sound.end();
+  if (pct >= 80) Confetti.go();
+  send(buildPayload(S, secs));
+}
+function buildPayload(S, secs) {
+  var order = ["element", "ion", "compound", "polyion", "exception", "detective"];
+  var summary = "Level reached: " + (G.cleared ? "5 (cleared)" : G.levelReached) + " | By type: " +
+    order.filter(function (t) { return S.by[t]; }).map(function (t) { return TYPE_NAMES[t].toLowerCase() + " " + S.by[t][0] + "/" + S.by[t][1]; }).join(", ") +
+    " | Errors: " + (S.errs.length ? S.errs.map(function (e) { return ERR[e].label + " x" + S.errCount[e]; }).join("; ") : "none") +
+    " | Best combo: " + G.bestStreak;
+  var wrong = G.log.filter(function (x) { return !x.ok; }).map(function (x) {
+    if (x.kind === "det") return "Detective " + x.d.eq.map(function (s) { return s === "→" ? "->" : plain(s[0]); }).join(" ") + ": picked ox " + plain(x.picked[0]) + ", red " + plain(x.picked[1]);
+    var you = x.typed ? (x.typed.noSign ? String(x.typed.val) : (x.typed.val > 0 ? "+" : "") + x.typed.val) : "none";
+    return x.q.t + " in " + plain(x.q.f) + ": typed " + you + " (ans " + (x.q.a > 0 ? "+" : "") + x.q.a + ")";
+  }).join(" | ");
+  return { course: SHEET_TAB, chapter: ACTIVITY, name: G.student.name, cls: G.student.cls, reg: G.student.reg,
+    score: S.correct, total: S.total, wrong: wrong || "None", time: Math.round(secs), points: G.points, summary: summary };
+}
+function send(payload) {
+  G.payload = payload;
+  var box = $("send"), msg = $("send-msg"), btn = $("btn-resend");
+  box.className = "send span"; btn.hidden = true; msg.textContent = "Sending your results to Ms Khoo…";
+  if (!SUBMIT_URL) { msg.textContent = "Results not sent (no Google Sheet link set up)."; return; }
+  fetch(SUBMIT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
+    .then(function () { msg.textContent = "✓ Sent! Ms Khoo has your results."; })
+    .catch(function () { box.className = "send span err"; msg.textContent = "Couldn't send. Check your internet, then tap Try again."; btn.hidden = false; });
+}
+$("btn-resend").addEventListener("click", function () { send(G.payload); });
+$("btn-again").addEventListener("click", function () { Confetti.stop(); var s = G.student; newGame(s); startChallenge(); });
+$("btn-home").addEventListener("click", function () { Confetti.stop(); $("txt-best").textContent = store("oxi-best") || 0; show("scr-start"); });
 
-        window.onload = () => render();
-        document.addEventListener('keydown', (e) => {
-            if (state !== 'QUIZ') return;
-            if (e.key >= '0' && e.key <= '9') handleKeypad(e.key);
-            if (e.key === '+') handleKeypad('+');
-            if (e.key === '-') handleKeypad('-');
-            if (e.key === 'Backspace') clearInput();
-            if (e.key === 'Enter') submitAnswer();
-        });
-    </script>
+/* =================== CONFETTI =================== */
+var Confetti = {
+  c: $("confetti"), on: false,
+  go: function () {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var c = this.c, w = c.width = innerWidth, h = c.height = innerHeight, cols = ["#FF8243", "#FFC0CB", "#FCE883", "#069494"], p = [];
+    c.hidden = false; this.on = true;
+    for (var i = 0; i < 110; i++) p.push({ x: Math.random() * w, y: -Math.random() * h, s: 6 + Math.random() * 8, v: 2 + Math.random() * 3, a: Math.random() * 6, col: cols[i % 4] });
+    var self = this, ctx = c.getContext("2d");
+    (function loop() {
+      if (!self.on) return;
+      ctx.clearRect(0, 0, w, h); var alive = false;
+      p.forEach(function (q) {
+        q.y += q.v; q.a += .08; q.x += Math.sin(q.a) * 1.2; if (q.y < h + 20) alive = true;
+        ctx.save(); ctx.translate(q.x, q.y); ctx.rotate(q.a); ctx.fillStyle = q.col; ctx.strokeStyle = "#1F2A2E"; ctx.lineWidth = 1.5;
+        ctx.fillRect(-q.s / 2, -q.s / 4, q.s, q.s / 2); ctx.strokeRect(-q.s / 2, -q.s / 4, q.s, q.s / 2); ctx.restore();
+      });
+      if (alive) requestAnimationFrame(loop); else self.stop();
+    })();
+  },
+  stop: function () { this.on = false; this.c.hidden = true; }
+};
+
+// for testing in the browser console
+window.__oxi = { BANK: BANK, BOSS_A: BOSS_A, BOSS_B: BOSS_B, DET: DET, diagnose: diagnose, working: working, state: function () { return G; } };
+})();
+</script>
 </body>
 </html>
